@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "board": "Дошка",
+    "history": "Історія",
+    "settings": "Налаштування"
+  },
+  "auth": {
+    "login": "Увійти",
+    "register": "Зареєструватися",
+    "name": "Ім'я",
+    "password": "Пароль",
+    "adminPassword": "Пароль адміна",
+    "logout": "Вийти",
+    "loginTitle": "Вхід",
+    "registerTitle": "Реєстрація"
+  },
+  "setup": {
+    "title": "Налаштування на сьогодні",
+    "search": "Пошук кімнати",
+    "save": "Зберегти план",
+    "checkout": "Виїзд",
+    "stayover": "Проживання",
+    "priority": "Пріоритет",
+    "noRooms": "Кімнати не вибрані"
+  },
+  "board": {
+    "title": "Дошка прибирання",
+    "all": "Всі",
+    "priority": "Пріоритетні",
+    "checkout": "Виїзд",
+    "stayover": "Проживання",
+    "cleaned": "Прибрано",
+    "notCleaned": "Не прибрано",
+    "notNeeded": "Не потрібно",
+    "updatedBy": "Оновлено:",
+    "noPlan": "План на сьогодні не створено",
+    "goToSetup": "Налаштувати"
+  },
+  "history": {
+    "title": "Історія",
+    "noHistory": "Немає записів",
+    "cleaned": "Прибрано",
+    "notNeeded": "Не потрібно",
+    "total": "Всього"
+  },
+  "settings": {
+    "title": "Налаштування",
+    "rooms": "Кімнати",
+    "addRoom": "Додати кімнату",
+    "roomNumber": "Номер кімнати",
+    "deleteRoom": "Видалити",
+    "whatsapp": "WhatsApp",
+    "whatsappEnabled": "Увімкнути WhatsApp",
+    "whatsappPhone": "Номер телефону",
+    "whatsappTemplate": "Шаблон повідомлення",
+    "language": "Мова",
+    "save": "Зберегти",
+    "saved": "Збережено"
+  },
+  "common": {
+    "loading": "Завантаження...",
+    "error": "Помилка",
+    "offline": "Немає з'єднання",
+    "send": "Надіслати",
+    "cancel": "Скасувати",
+    "confirm": "Підтвердити"
+  }
+}

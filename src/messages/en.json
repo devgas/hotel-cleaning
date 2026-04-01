@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "board": "Board",
+    "history": "History",
+    "settings": "Settings"
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Register",
+    "name": "Name",
+    "password": "Password",
+    "adminPassword": "Admin Password",
+    "logout": "Sign Out",
+    "loginTitle": "Sign In",
+    "registerTitle": "Register"
+  },
+  "setup": {
+    "title": "Today's Setup",
+    "search": "Search room",
+    "save": "Save Plan",
+    "checkout": "Checkout",
+    "stayover": "Stayover",
+    "priority": "Priority",
+    "noRooms": "No rooms selected"
+  },
+  "board": {
+    "title": "Cleaning Board",
+    "all": "All",
+    "priority": "Priority",
+    "checkout": "Checkout",
+    "stayover": "Stayover",
+    "cleaned": "Cleaned",
+    "notCleaned": "Not Cleaned",
+    "notNeeded": "Not Needed",
+    "updatedBy": "Updated by:",
+    "noPlan": "No plan for today",
+    "goToSetup": "Set Up"
+  },
+  "history": {
+    "title": "History",
+    "noHistory": "No records",
+    "cleaned": "Cleaned",
+    "notNeeded": "Not Needed",
+    "total": "Total"
+  },
+  "settings": {
+    "title": "Settings",
+    "rooms": "Rooms",
+    "addRoom": "Add Room",
+    "roomNumber": "Room Number",
+    "deleteRoom": "Delete",
+    "whatsapp": "WhatsApp",
+    "whatsappEnabled": "Enable WhatsApp",
+    "whatsappPhone": "Phone Number",
+    "whatsappTemplate": "Message Template",
+    "language": "Language",
+    "save": "Save",
+    "saved": "Saved"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "offline": "No connection",
+    "send": "Send",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  }
+}
