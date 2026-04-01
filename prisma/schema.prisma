@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Hotel {
+  id          Int           @id @default(autoincrement())
+  name        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  users       User[]
+  rooms       Room[]
+  dailyPlans  DailyPlan[]
+  settings    AppSetting[]
+}
+
+model User {
+  id           Int             @id @default(autoincrement())
+  hotelId      Int
+  name         String
+  passwordHash String
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  hotel        Hotel           @relation(fields: [hotelId], references: [id])
+  dailyPlans   DailyPlan[]
+  planRooms    DailyPlanRoom[]
+  history      StatusHistory[]
+}
+
+model Room {
+  id           Int             @id @default(autoincrement())
+  hotelId      Int
+  roomNumber   String
+  isActive     Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  hotel        Hotel           @relation(fields: [hotelId], references: [id])
+  planRooms    DailyPlanRoom[]
+
+  @@unique([hotelId, roomNumber])
+}
+
+model DailyPlan {
+  id              Int             @id @default(autoincrement())
+  hotelId         Int
+  date            DateTime        @db.Date
+  createdByUserId Int
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  hotel           Hotel           @relation(fields: [hotelId], references: [id])
+  createdBy       User            @relation(fields: [createdByUserId], references: [id])
+  rooms           DailyPlanRoom[]
+
+  @@unique([hotelId, date])
+}
+
+model DailyPlanRoom {
+  id              Int             @id @default(autoincrement())
+  dailyPlanId     Int
+  roomId          Int
+  roomType        RoomType        @default(stayover)
+  priority        Boolean         @default(false)
+  status          CleaningStatus  @default(not_cleaned_yet)
+  updatedByUserId Int?
+  updatedAt       DateTime        @updatedAt
+  dailyPlan       DailyPlan       @relation(fields: [dailyPlanId], references: [id])
+  room            Room            @relation(fields: [roomId], references: [id])
+  updatedBy       User?           @relation(fields: [updatedByUserId], references: [id])
+  history         StatusHistory[]
+
+  @@unique([dailyPlanId, roomId])
+}
+
+model StatusHistory {
+  id              Int            @id @default(autoincrement())
+  dailyPlanRoomId Int
+  oldStatus       CleaningStatus?
+  newStatus       CleaningStatus
+  oldRoomType     RoomType?
+  newRoomType     RoomType
+  changedByUserId Int
+  changedAt       DateTime       @default(now())
+  sendMessageUsed Boolean        @default(false)
+  dailyPlanRoom   DailyPlanRoom  @relation(fields: [dailyPlanRoomId], references: [id])
+  changedBy       User           @relation(fields: [changedByUserId], references: [id])
+}
+
+model AppSetting {
+  id        Int      @id @default(autoincrement())
+  hotelId   Int
+  key       String
+  value     String
+  hotel     Hotel    @relation(fields: [hotelId], references: [id])
+
+  @@unique([hotelId, key])
+}
+
+enum RoomType {
+  checkout
+  stayover
+}
+
+enum CleaningStatus {
+  not_cleaned_yet
+  cleaned
+  not_needed
+}
