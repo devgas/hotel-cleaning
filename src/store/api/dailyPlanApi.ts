@@ -14,6 +14,7 @@ interface CreatePlanInput {
     roomType: 'checkout' | 'stayover'
     priority: boolean
     priorityTime?: string | null
+    guestCount?: number
   }[]
 }
 
@@ -47,8 +48,8 @@ export const dailyPlanApi = baseApi.injectEndpoints({
       invalidatesTags: ['DailyPlanRooms'],
     }),
     updateRoomType: build.mutation<
-      { roomType: RoomType; priority: boolean; priorityTime: string | null },
-      { id: number; roomType: RoomType; priority?: boolean; priorityTime?: string | null }
+      { roomType: RoomType; priority: boolean; priorityTime: string | null; guestCount: number },
+      { id: number; roomType: RoomType; priority?: boolean; priorityTime?: string | null; guestCount?: number }
     >({
       query: ({ id, ...body }) => ({
         url: `/daily-plan-rooms/${id}/type`,
