@@ -44,26 +44,57 @@ export async function GET() {
 
 export async function DELETE(req: NextRequest) {
   const session = await auth()
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!session) {
+    console.log('[clear-plan] unauthorized: missing session')
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
 
   const body = await req.json()
   const { password } = body
-  if (!password) return NextResponse.json({ error: 'Password required' }, { status: 400 })
+  if (!password) {
+    console.log('[clear-plan] bad-request: missing password', {
+      userId: (session.user as { id?: string }).id ?? null,
+      hotelId: (session.user as { hotelId?: string }).hotelId ?? null,
+    })
+    return NextResponse.json({ error: 'Password required' }, { status: 400 })
+  }
 
   const userId = parseInt((session.user as { id?: string }).id ?? '0')
+  const hotelId = parseInt((session.user as { hotelId?: string }).hotelId ?? '1')
+
+  console.log('[clear-plan] request', {
+    userId,
+    hotelId,
+  })
+
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { passwordHash: true } })
-  if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 })
+  if (!user) {
+    console.log('[clear-plan] user-not-found', {
+      userId,
+      hotelId,
+    })
+    return NextResponse.json({ error: 'User not found' }, { status: 404 })
+  }
 
   const valid = await bcrypt.compare(password, user.passwordHash)
+  console.log('[clear-plan] password-check', {
+    userId,
+    hotelId,
+    valid,
+  })
   if (!valid) return NextResponse.json({ error: 'Invalid password' }, { status: 403 })
-
-  const hotelId = parseInt((session.user as { hotelId?: string }).hotelId ?? '1')
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
   await prisma.dailyPlan.deleteMany({
     where: { hotelId, date: today },
+  })
+
+  console.log('[clear-plan] success', {
+    userId,
+    hotelId,
+    date: today.toISOString(),
   })
 
   return NextResponse.json({ ok: true })
