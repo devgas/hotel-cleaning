@@ -8,13 +8,23 @@ interface DailyPlan {
 }
 
 interface CreatePlanInput {
-  rooms: { roomId: number; roomType: 'checkout' | 'stayover'; priority: boolean }[]
+  date?: string
+  rooms: {
+    roomId: number
+    roomType: 'checkout' | 'stayover'
+    priority: boolean
+    priorityTime?: string | null
+  }[]
 }
 
 export const dailyPlanApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getTodayPlan: build.query<DailyPlan | null, void>({
       query: () => '/daily-plans/today',
+      providesTags: ['DailyPlan', 'DailyPlanRooms'],
+    }),
+    getPlanByDate: build.query<DailyPlan | null, string>({
+      query: (date) => `/daily-plans/${date}`,
       providesTags: ['DailyPlan', 'DailyPlanRooms'],
     }),
     createDailyPlan: build.mutation<{ id: number }, CreatePlanInput>({
@@ -37,8 +47,8 @@ export const dailyPlanApi = baseApi.injectEndpoints({
       invalidatesTags: ['DailyPlanRooms'],
     }),
     updateRoomType: build.mutation<
-      { roomType: RoomType; priority: boolean },
-      { id: number; roomType: RoomType; priority?: boolean }
+      { roomType: RoomType; priority: boolean; priorityTime: string | null },
+      { id: number; roomType: RoomType; priority?: boolean; priorityTime?: string | null }
     >({
       query: ({ id, ...body }) => ({
         url: `/daily-plan-rooms/${id}/type`,
@@ -52,6 +62,7 @@ export const dailyPlanApi = baseApi.injectEndpoints({
 
 export const {
   useGetTodayPlanQuery,
+  useGetPlanByDateQuery,
   useCreateDailyPlanMutation,
   useGetHistoryQuery,
   useUpdateRoomStatusMutation,

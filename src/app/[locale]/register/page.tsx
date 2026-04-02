@@ -23,10 +23,17 @@ export default function RegisterPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
+    const trimmedName = name.trim()
+    const trimmedPassword = password.trim()
+    const trimmedAdminPassword = adminPassword.trim()
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, password, adminPassword }),
+      body: JSON.stringify({
+        name: trimmedName,
+        password: trimmedPassword,
+        adminPassword: trimmedAdminPassword,
+      }),
     })
     if (res.ok) {
       setSuccess(true)

@@ -64,6 +64,7 @@ model DailyPlanRoom {
   roomId          Int
   roomType        RoomType        @default(stayover)
   priority        Boolean         @default(false)
+  priorityTime    String?
   status          CleaningStatus  @default(not_cleaned_yet)
   updatedByUserId Int?
   updatedAt       DateTime        @updatedAt

@@ -24,13 +24,17 @@
     "backToLogin": "Back to login"
   },
   "setup": {
-    "title": "Today's Setup",
+    "title": "Plan Setup",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "editingDate": "Editing {date}",
     "search": "Search room",
     "save": "Save Plan",
-    "confirmOverride": "Saving will override the current plan for today. Continue?",
+    "confirmOverride": "Saving will override the current plan for {date}. Continue?",
     "checkout": "Checkout",
     "stayover": "Stayover",
     "priority": "Priority",
+    "priorityTime": "Priority Time",
     "noRooms": "No rooms selected"
   },
   "board": {
@@ -42,6 +46,7 @@
     "editPlan": "Edit Plan",
     "editRoom": "Edit Room",
     "roomType": "Room Type",
+    "priorityTime": "Priority Time",
     "saveChanges": "Save Changes",
     "openWhatsApp": "Open WhatsApp",
     "cleaned": "Cleaned",

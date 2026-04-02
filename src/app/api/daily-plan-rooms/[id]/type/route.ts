@@ -2,10 +2,22 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth/authOptions'
 import { prisma } from '@/lib/db/prisma'
 import { z } from 'zod'
+import { defaultPriorityTime, isValidPriorityTime } from '@/lib/dailyPlans/priorityTime'
 
 const typeSchema = z.object({
   roomType: z.enum(['checkout', 'stayover']),
   priority: z.boolean().optional(),
+  priorityTime: z.string().nullable().optional(),
+}).superRefine((value, ctx) => {
+  if (!value.priority) return
+
+  if (!isValidPriorityTime(value.priorityTime)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['priorityTime'],
+      message: 'Priority time must be between 09:00 and 23:00',
+    })
+  }
 })
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -30,6 +42,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     data: {
       roomType: parsed.data.roomType,
       priority: parsed.data.priority ?? current.priority,
+      priorityTime:
+        parsed.data.roomType === 'stayover'
+          ? null
+          : parsed.data.priority ?? current.priority
+            ? (parsed.data.priorityTime ?? current.priorityTime ?? defaultPriorityTime)
+            : null,
       updatedByUserId: userId,
       history: {
         create: {
@@ -43,5 +61,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     },
   })
 
-  return NextResponse.json({ roomType: updated.roomType, priority: updated.priority })
+  return NextResponse.json({
+    roomType: updated.roomType,
+    priority: updated.priority,
+    priorityTime: updated.priorityTime,
+  })
 }

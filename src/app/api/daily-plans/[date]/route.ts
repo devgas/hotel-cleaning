@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth/authOptions'
 import { prisma } from '@/lib/db/prisma'
+import { parsePlanDate } from '@/lib/dailyPlans/planDate'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ date: string }> }) {
   const session = await auth()
@@ -8,8 +9,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
 
   const hotelId = parseInt((session.user as { hotelId?: string }).hotelId ?? '1')
   const { date: dateStr } = await params
-  const date = new Date(dateStr)
-  date.setHours(0, 0, 0, 0)
+  const date = parsePlanDate(dateStr)
+  if (!date) return NextResponse.json({ error: 'Invalid date' }, { status: 400 })
 
   const plan = await prisma.dailyPlan.findUnique({
     where: { hotelId_date: { hotelId, date } },
@@ -19,7 +20,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
           room: { select: { roomNumber: true } },
           updatedBy: { select: { name: true } },
         },
-        orderBy: { room: { roomNumber: 'asc' } },
+        orderBy: [{ priority: 'desc' }, { priorityTime: 'asc' }, { room: { roomNumber: 'asc' } }],
       },
     },
   })
@@ -35,6 +36,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
       roomNumber: r.room.roomNumber,
       roomType: r.roomType,
       priority: r.priority,
+      priorityTime: r.priorityTime,
       status: r.status,
       updatedBy: r.updatedBy?.name ?? null,
       updatedAt: r.updatedAt.toISOString(),

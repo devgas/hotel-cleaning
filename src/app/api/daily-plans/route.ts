@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth/authOptions'
 import { prisma } from '@/lib/db/prisma'
+import { parsePlanDate } from '@/lib/dailyPlans/planDate'
 import { validateDailyPlanInput } from '@/lib/dailyPlans/validateDailyPlan'
 
 export async function POST(req: NextRequest) {
@@ -15,11 +16,14 @@ export async function POST(req: NextRequest) {
 
   const hotelId = parseInt((session.user as { hotelId?: string }).hotelId ?? '1')
   const userId = parseInt(session.user!.id!)
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const targetDate = parsed.data.date ? parsePlanDate(parsed.data.date) : new Date()
+  if (!targetDate) {
+    return NextResponse.json({ error: { date: ['Invalid date'] } }, { status: 400 })
+  }
+  targetDate.setHours(0, 0, 0, 0)
 
   const existing = await prisma.dailyPlan.findUnique({
-    where: { hotelId_date: { hotelId, date: today } },
+    where: { hotelId_date: { hotelId, date: targetDate } },
     include: {
       rooms: {
         select: {
@@ -56,6 +60,7 @@ export async function POST(req: NextRequest) {
             data: {
               roomType: room.roomType,
               priority: room.priority,
+              priorityTime: room.priority ? room.priorityTime ?? '09:00' : null,
               updatedByUserId: userId,
             },
           })
@@ -86,16 +91,17 @@ export async function POST(req: NextRequest) {
   const plan = await prisma.dailyPlan.create({
     data: {
       hotelId,
-      date: today,
+      date: targetDate,
       createdByUserId: userId,
       rooms: {
         create: parsed.data.rooms.map((r) => ({
           roomId: r.roomId,
-          roomType: r.roomType,
-          priority: r.priority,
-          status: 'not_cleaned_yet' as const,
-          updatedByUserId: userId,
-        })),
+            roomType: r.roomType,
+            priority: r.priority,
+            priorityTime: r.priority ? r.priorityTime ?? '09:00' : null,
+            status: 'not_cleaned_yet' as const,
+            updatedByUserId: userId,
+          })),
       },
     },
   })

@@ -1,6 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { defaultPriorityTime, priorityTimeOptions } from '@/lib/dailyPlans/priorityTime'
 import { useUpdateRoomStatusMutation, useUpdateRoomTypeMutation } from '@/store/api/dailyPlanApi'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { buildWhatsAppAppLink, buildWhatsAppLink, normalizeWhatsAppChatLink } from '@/lib/whatsapp/buildLink'
@@ -44,6 +45,7 @@ export function RoomCard({
   const [isEditorOpen, setIsEditorOpen] = useState(false)
   const [draftRoomType, setDraftRoomType] = useState<RoomType>(room.roomType)
   const [draftPriority, setDraftPriority] = useState(room.priority)
+  const [draftPriorityTime, setDraftPriorityTime] = useState(room.priorityTime ?? defaultPriorityTime)
   const longPressTimeoutRef = useRef<number | null>(null)
   const chatLink = normalizeWhatsAppChatLink(whatsappChatLink)
   const whatsappMessage = whatsappTemplate.replace('{room}', room.roomNumber)
@@ -102,6 +104,7 @@ export function RoomCard({
   function openEditor() {
     setDraftRoomType(room.roomType)
     setDraftPriority(room.priority)
+    setDraftPriorityTime(room.priorityTime ?? defaultPriorityTime)
     setIsEditorOpen(true)
   }
 
@@ -125,7 +128,18 @@ export function RoomCard({
     setDraftRoomType(nextType)
     if (nextType === 'stayover') {
       setDraftPriority(false)
+      setDraftPriorityTime(defaultPriorityTime)
     }
+  }
+
+  function handlePriorityToggle() {
+    setDraftPriority((prev) => {
+      const next = !prev
+      if (next) {
+        setDraftPriorityTime((current) => current || defaultPriorityTime)
+      }
+      return next
+    })
   }
 
   async function handleSaveChanges() {
@@ -133,6 +147,7 @@ export function RoomCard({
       id: room.dailyPlanRoomId,
       roomType: draftRoomType,
       priority: draftPriority,
+      priorityTime: draftPriority ? draftPriorityTime : null,
     }).unwrap()
     setIsEditorOpen(false)
   }
@@ -155,7 +170,9 @@ export function RoomCard({
           <div className="flex items-center gap-2">
             <span className="text-lg font-bold text-gray-900">{room.roomNumber}</span>
             {room.priority && (
-              <span className="text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">★</span>
+              <span className="text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">
+                ★ {room.priorityTime ?? defaultPriorityTime}
+              </span>
             )}
             <span className="text-xs text-gray-400">{roomTypeLabel}</span>
           </div>
@@ -201,7 +218,7 @@ export function RoomCard({
               </div>
             </div>
             <button
-              onClick={() => setDraftPriority((prev) => !prev)}
+              onClick={handlePriorityToggle}
               disabled={draftRoomType !== 'checkout'}
               className={cn(
                 'w-full rounded-lg border px-4 py-3 text-sm font-medium transition-colors',
@@ -212,6 +229,22 @@ export function RoomCard({
             >
               ★ {t('priority')}
             </button>
+            {draftRoomType === 'checkout' && draftPriority && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-700">{t('priorityTime')}</p>
+                <select
+                  value={draftPriorityTime}
+                  onChange={(e) => setDraftPriorityTime(e.target.value)}
+                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                >
+                  {priorityTimeOptions.map((time) => (
+                    <option key={time} value={time}>
+                      {time}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
           <SheetFooter>
             <Button variant="outline" onClick={() => setIsEditorOpen(false)} disabled={isSavingType}>

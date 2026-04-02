@@ -7,6 +7,7 @@ export interface RoomWithStatus {
   roomNumber: string
   roomType: RoomType
   priority: boolean
+  priorityTime?: string | null
   status: CleaningStatus
   updatedBy?: string | null
   updatedAt: string

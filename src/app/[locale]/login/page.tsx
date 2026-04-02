@@ -22,9 +22,12 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
+    const trimmedName = name.trim()
+    const trimmedPassword = password.trim()
+
     const res = await signIn('credentials', {
-      name,
-      password,
+      name: trimmedName,
+      password: trimmedPassword,
       redirect: false,
       callbackUrl: `/${locale}/board`,
     })

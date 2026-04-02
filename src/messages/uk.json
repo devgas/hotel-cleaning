@@ -24,13 +24,17 @@
     "backToLogin": "Назад до входу"
   },
   "setup": {
-    "title": "Налаштування на сьогодні",
+    "title": "Налаштування плану",
+    "today": "Сьогодні",
+    "tomorrow": "Завтра",
+    "editingDate": "Редагування на {date}",
     "search": "Пошук кімнати",
     "save": "Зберегти план",
-    "confirmOverride": "Збереження перезапише поточний план на сьогодні. Продовжити?",
+    "confirmOverride": "Збереження перезапише поточний план на {date}. Продовжити?",
     "checkout": "Наїзд",
     "stayover": "Уклід",
     "priority": "Пріоритет",
+    "priorityTime": "Час пріоритету",
     "noRooms": "Кімнати не вибрані"
   },
   "board": {
@@ -42,11 +46,12 @@
     "editPlan": "Редагувати план",
     "editRoom": "Редагувати кімнату",
     "roomType": "Тип кімнати",
+    "priorityTime": "Час пріоритету",
     "saveChanges": "Зберегти зміни",
     "openWhatsApp": "Відкрити WhatsApp",
     "cleaned": "Прибрано",
     "notCleaned": "Не прибрано",
-    "notNeeded": "Не потрібно",
+    "notNeeded": "Нерушенка",
     "updatedBy": "Оновлено:",
     "noPlan": "План на сьогодні не створено",
     "goToSetup": "Налаштувати"
@@ -55,7 +60,7 @@
     "title": "Історія",
     "noHistory": "Немає записів",
     "cleaned": "Прибрано",
-    "notNeeded": "Не потрібно",
+    "notNeeded": "Нерушенка",
     "total": "Всього"
   },
   "settings": {

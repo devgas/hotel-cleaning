@@ -19,7 +19,7 @@ export async function GET() {
           room: { select: { roomNumber: true } },
           updatedBy: { select: { name: true } },
         },
-        orderBy: [{ priority: 'desc' }, { room: { roomNumber: 'asc' } }],
+        orderBy: [{ priority: 'desc' }, { priorityTime: 'asc' }, { room: { roomNumber: 'asc' } }],
       },
     },
   })
@@ -35,6 +35,7 @@ export async function GET() {
       roomNumber: r.room.roomNumber,
       roomType: r.roomType,
       priority: r.priority,
+      priorityTime: r.priorityTime,
       status: r.status,
       updatedBy: r.updatedBy?.name ?? null,
       updatedAt: r.updatedAt.toISOString(),

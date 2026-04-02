@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { defaultPriorityTime, priorityTimeOptions } from '@/lib/dailyPlans/priorityTime'
 import { cn } from '@/lib/utils'
 import type { RoomType } from '@/types'
 
@@ -13,6 +14,7 @@ interface SelectedRoom {
   roomId: number
   roomType: RoomType
   priority: boolean
+  priorityTime?: string | null
 }
 
 interface Props {
@@ -21,13 +23,22 @@ interface Props {
   onToggle: (roomId: number) => void
   onTypeChange: (roomId: number, type: RoomType) => void
   onPriorityChange: (roomId: number, priority: boolean) => void
+  onPriorityTimeChange: (roomId: number, priorityTime: string) => void
+  searchClassName?: string
 }
 
-export function RoomSelector({ rooms, selected, onToggle, onTypeChange, onPriorityChange }: Props) {
+export function RoomSelector({
+  rooms,
+  selected,
+  onToggle,
+  onTypeChange,
+  onPriorityChange,
+  onPriorityTimeChange,
+  searchClassName,
+}: Props) {
   const t = useTranslations('setup')
   const [search, setSearch] = useState('')
 
-  const isSelected = (id: number) => selected.some((s) => s.roomId === id)
   const getSelected = (id: number) => selected.find((s) => s.roomId === id)
 
   const filtered = rooms.filter((r) =>
@@ -36,13 +47,15 @@ export function RoomSelector({ rooms, selected, onToggle, onTypeChange, onPriori
 
   return (
     <div className="space-y-3">
-      <input
-        type="text"
-        placeholder={t('search')}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+      <div className={cn('border-b border-gray-200 bg-white', searchClassName)}>
+        <input
+          type="text"
+          placeholder={t('search')}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
       <div className="space-y-2">
         {filtered.map((room) => {
           const sel = getSelected(room.id)
@@ -67,7 +80,7 @@ export function RoomSelector({ rooms, selected, onToggle, onTypeChange, onPriori
                 </button>
                 <span className="font-medium text-gray-900">{room.roomNumber}</span>
                 {sel && (
-                  <div className="ml-auto flex items-center gap-2">
+                  <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
                     <div className="flex rounded-lg overflow-hidden border border-gray-200 text-xs">
                       {(['checkout', 'stayover'] as RoomType[]).map((type) => (
                         <button
@@ -83,15 +96,36 @@ export function RoomSelector({ rooms, selected, onToggle, onTypeChange, onPriori
                       ))}
                     </div>
                     {sel.roomType === 'checkout' && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); onPriorityChange(room.id, !sel.priority) }}
-                        className={cn(
-                          'text-xs px-2 py-1 rounded-lg border',
-                          sel.priority ? 'bg-orange-100 border-orange-300 text-orange-700' : 'border-gray-200 text-gray-400'
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onPriorityChange(room.id, !sel.priority)
+                          }}
+                          className={cn(
+                            'text-xs px-2 py-1 rounded-lg border',
+                            sel.priority
+                              ? 'bg-orange-100 border-orange-300 text-orange-700'
+                              : 'border-gray-200 text-gray-400'
+                          )}
+                        >
+                          ★ {t('priority')}
+                        </button>
+                        {sel.priority && (
+                          <select
+                            value={sel.priorityTime ?? defaultPriorityTime}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => onPriorityTimeChange(room.id, e.target.value)}
+                            className="rounded-lg border border-orange-200 bg-white px-2 py-1 text-xs text-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                          >
+                            {priorityTimeOptions.map((time) => (
+                              <option key={time} value={time}>
+                                {time}
+                              </option>
+                            ))}
+                          </select>
                         )}
-                      >
-                        ★ {t('priority')}
-                      </button>
+                      </>
                     )}
                   </div>
                 )}
