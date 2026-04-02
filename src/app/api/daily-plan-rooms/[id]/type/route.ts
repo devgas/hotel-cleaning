@@ -8,6 +8,7 @@ const typeSchema = z.object({
   roomType: z.enum(['checkout', 'stayover']),
   priority: z.boolean().optional(),
   priorityTime: z.string().nullable().optional(),
+  guestCount: z.number().int().min(1).max(5).optional(),
 }).superRefine((value, ctx) => {
   if (!value.priority) return
 
@@ -48,6 +49,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
           : parsed.data.priority ?? current.priority
             ? (parsed.data.priorityTime ?? current.priorityTime ?? defaultPriorityTime)
             : null,
+      guestCount: parsed.data.guestCount ?? current.guestCount,
       updatedByUserId: userId,
       history: {
         create: {
@@ -65,5 +67,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     roomType: updated.roomType,
     priority: updated.priority,
     priorityTime: updated.priorityTime,
+    guestCount: updated.guestCount,
   })
 }
