@@ -273,9 +273,10 @@ export default function SetupPage() {
         <div className="fixed inset-x-0 bottom-20 z-40 bg-gradient-to-t from-white via-white px-4 pt-3">
           <button
             onClick={handleSave}
-            disabled={isLoading}
+            disabled={isLoading || !selectedOverrides[activeTab]}
             className={cn(
-              'w-full py-4 rounded-2xl text-base font-semibold text-white shadow-lg active:scale-95 transition-transform disabled:opacity-50',
+              'w-full py-4 rounded-2xl text-base font-semibold text-white shadow-lg transition-all',
+              !selectedOverrides[activeTab] ? 'opacity-40 cursor-default' : 'active:scale-95',
               activeTab === 'today' ? 'bg-blue-600' : 'bg-emerald-600'
             )}
           >
