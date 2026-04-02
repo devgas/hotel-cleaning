@@ -10,7 +10,6 @@ import { useGetTodayPlanQuery } from '@/store/api/dailyPlanApi'
 import { useGetSettingsQuery } from '@/store/api/settingsApi'
 import type { RootState } from '@/store'
 import type { RoomWithStatus } from '@/types'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
 const POLL_INTERVAL = 15000
@@ -40,9 +39,12 @@ export default function BoardPage() {
         <Header title={t('title')} />
         <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 p-4">
           <p className="text-gray-500">{t('noPlan')}</p>
-          <Button asChild>
-            <Link href={`/${locale}/setup`}>{t('goToSetup')}</Link>
-          </Button>
+          <Link
+            href={`/${locale}/setup`}
+            className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-medium"
+          >
+            {t('goToSetup')}
+          </Link>
         </div>
       </div>
     )
