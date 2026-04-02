@@ -83,55 +83,53 @@ export function RoomSelector({
                 </button>
                 <span className="font-medium text-gray-900">{room.roomNumber}</span>
                 {sel && (
-                  <div className="ml-auto flex flex-col items-start gap-1.5">
-                    {/* Row 1: room type + guest count */}
-                    <div className="flex items-center gap-2">
-                      <div className="flex rounded-lg overflow-hidden border border-gray-200 text-xs">
-                        {(['checkout', 'stayover'] as RoomType[]).map((type) => (
-                          <button
-                            key={type}
-                            onClick={(e) => { e.stopPropagation(); onTypeChange(room.id, type) }}
-                            className={cn(
-                              'px-2 py-1',
-                              sel.roomType === type ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'
-                            )}
-                          >
-                            {t(type)}
-                          </button>
-                        ))}
-                      </div>
-                      <div
-                        className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1"
-                        onClick={(e) => e.stopPropagation()}
-                      >
+                  <div className="ml-auto grid grid-cols-[auto_auto] items-center gap-x-2 gap-y-1.5">
+                    {/* Row 1: room type | guest count */}
+                    <div className="flex rounded-lg overflow-hidden border border-gray-200 text-xs">
+                      {(['checkout', 'stayover'] as RoomType[]).map((type) => (
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            onGuestCountChange(room.id, Math.max(1, sel.guestCount - 1))
-                          }}
-                          disabled={sel.guestCount <= 1}
-                          className="w-5 h-5 rounded-full bg-gray-200 text-gray-600 font-bold text-xs disabled:opacity-30 flex items-center justify-center"
+                          key={type}
+                          onClick={(e) => { e.stopPropagation(); onTypeChange(room.id, type) }}
+                          className={cn(
+                            'px-2 py-1',
+                            sel.roomType === type ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'
+                          )}
                         >
-                          −
+                          {t(type)}
                         </button>
-                        <span className="text-xs font-bold text-gray-700 min-w-[28px] text-center">
-                          👤 {sel.guestCount}
-                        </span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            onGuestCountChange(room.id, Math.min(5, sel.guestCount + 1))
-                          }}
-                          disabled={sel.guestCount >= 5}
-                          className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs disabled:opacity-30 flex items-center justify-center"
-                        >
-                          +
-                        </button>
-                      </div>
+                      ))}
                     </div>
-                    {/* Row 2: priority + time (checkout only) */}
+                    <div
+                      className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onGuestCountChange(room.id, Math.max(1, sel.guestCount - 1))
+                        }}
+                        disabled={sel.guestCount <= 1}
+                        className="w-5 h-5 rounded-full bg-gray-200 text-gray-600 font-bold text-xs disabled:opacity-30 flex items-center justify-center"
+                      >
+                        −
+                      </button>
+                      <span className="text-xs font-bold text-gray-700 min-w-[28px] text-center">
+                        👤 {sel.guestCount}
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onGuestCountChange(room.id, Math.min(5, sel.guestCount + 1))
+                        }}
+                        disabled={sel.guestCount >= 5}
+                        className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs disabled:opacity-30 flex items-center justify-center"
+                      >
+                        +
+                      </button>
+                    </div>
+                    {/* Row 2: priority | time (checkout only) */}
                     {sel.roomType === 'checkout' && (
-                      <div className="flex items-center gap-2">
+                      <>
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
@@ -146,21 +144,28 @@ export function RoomSelector({
                         >
                           ★ {t('priority')}
                         </button>
-                        {sel.priority && (
-                          <select
-                            value={sel.priorityTime ?? defaultPriorityTime}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={(e) => onPriorityTimeChange(room.id, e.target.value)}
-                            className="rounded-lg border border-orange-200 bg-white px-2 py-1 text-xs text-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-400"
-                          >
-                            {priorityTimeOptions.map((time) => (
-                              <option key={time} value={time}>
-                                {time}
-                              </option>
-                            ))}
-                          </select>
-                        )}
-                      </div>
+                        <div
+                          className="flex items-center rounded-lg border border-gray-200 bg-white px-2 py-1"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {sel.priority ? (
+                            <select
+                              value={sel.priorityTime ?? defaultPriorityTime}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={(e) => onPriorityTimeChange(room.id, e.target.value)}
+                              className="text-xs text-orange-700 bg-transparent focus:outline-none w-full"
+                            >
+                              {priorityTimeOptions.map((time) => (
+                                <option key={time} value={time}>
+                                  {time}
+                                </option>
+                              ))}
+                            </select>
+                          ) : (
+                            <span className="text-xs text-gray-300 min-w-[28px] text-center">—</span>
+                          )}
+                        </div>
+                      </>
                     )}
                   </div>
                 )}
