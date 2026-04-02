@@ -66,7 +66,7 @@ export default function BoardPage() {
   return (
     <div>
       <Header title={t('title')} />
-      <div className="sticky top-[57px] z-30 bg-white">
+      <div className="sticky top-[52px] z-30 bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
         <SummaryCounters total={rooms.length} cleaned={cleaned} notNeeded={notNeeded} notCleaned={notCleaned} />
         <BoardTabs />
       </div>
