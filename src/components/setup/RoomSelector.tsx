@@ -83,23 +83,55 @@ export function RoomSelector({
                 </button>
                 <span className="font-medium text-gray-900">{room.roomNumber}</span>
                 {sel && (
-                  <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
-                    <div className="flex rounded-lg overflow-hidden border border-gray-200 text-xs">
-                      {(['checkout', 'stayover'] as RoomType[]).map((type) => (
+                  <div className="ml-auto flex flex-col items-end gap-1.5">
+                    {/* Row 1: room type + guest count */}
+                    <div className="flex items-center gap-2">
+                      <div className="flex rounded-lg overflow-hidden border border-gray-200 text-xs">
+                        {(['checkout', 'stayover'] as RoomType[]).map((type) => (
+                          <button
+                            key={type}
+                            onClick={(e) => { e.stopPropagation(); onTypeChange(room.id, type) }}
+                            className={cn(
+                              'px-2 py-1',
+                              sel.roomType === type ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'
+                            )}
+                          >
+                            {t(type)}
+                          </button>
+                        ))}
+                      </div>
+                      <div
+                        className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <button
-                          key={type}
-                          onClick={(e) => { e.stopPropagation(); onTypeChange(room.id, type) }}
-                          className={cn(
-                            'px-2 py-1',
-                            sel.roomType === type ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'
-                          )}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onGuestCountChange(room.id, Math.max(1, sel.guestCount - 1))
+                          }}
+                          disabled={sel.guestCount <= 1}
+                          className="w-5 h-5 rounded-full bg-gray-200 text-gray-600 font-bold text-xs disabled:opacity-30 flex items-center justify-center"
                         >
-                          {t(type)}
+                          −
                         </button>
-                      ))}
+                        <span className="text-xs font-bold text-gray-700 min-w-[28px] text-center">
+                          👤 {sel.guestCount}
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onGuestCountChange(room.id, Math.min(5, sel.guestCount + 1))
+                          }}
+                          disabled={sel.guestCount >= 5}
+                          className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs disabled:opacity-30 flex items-center justify-center"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
+                    {/* Row 2: priority + time (checkout only) */}
                     {sel.roomType === 'checkout' && (
-                      <>
+                      <div className="flex items-center gap-2">
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
@@ -128,36 +160,8 @@ export function RoomSelector({
                             ))}
                           </select>
                         )}
-                      </>
+                      </div>
                     )}
-                    <div
-                      className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          onGuestCountChange(room.id, Math.max(1, sel.guestCount - 1))
-                        }}
-                        disabled={sel.guestCount <= 1}
-                        className="w-5 h-5 rounded-full bg-gray-200 text-gray-600 font-bold text-xs disabled:opacity-30 flex items-center justify-center"
-                      >
-                        −
-                      </button>
-                      <span className="text-xs font-bold text-gray-700 min-w-[28px] text-center">
-                        👤 {sel.guestCount}
-                      </span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          onGuestCountChange(room.id, Math.min(5, sel.guestCount + 1))
-                        }}
-                        disabled={sel.guestCount >= 5}
-                        className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs disabled:opacity-30 flex items-center justify-center"
-                      >
-                        +
-                      </button>
-                    </div>
                   </div>
                 )}
               </div>
