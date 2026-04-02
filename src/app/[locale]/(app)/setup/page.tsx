@@ -209,7 +209,7 @@ export default function SetupPage() {
   return (
     <div>
       <Header title={t('title')} />
-      <div className="sticky top-[57px] z-30 bg-white px-4 pb-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
+      <div className="sticky top-[52px] z-30 bg-white px-4 pt-3 pb-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
         <div className="grid h-auto w-full grid-cols-2 rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
           <button
             type="button"
@@ -250,7 +250,7 @@ export default function SetupPage() {
               onPriorityChange={changePriority}
               onPriorityTimeChange={changePriorityTime}
               onGuestCountChange={changeGuestCount}
-              searchClassName="sticky top-[117px] z-20 -mt-1 pb-3 pt-1"
+              searchClassName="sticky top-[112px] z-20 -mt-1 pb-3 pt-1"
             />
           </div>
         )}
@@ -264,7 +264,7 @@ export default function SetupPage() {
               onPriorityChange={changePriority}
               onPriorityTimeChange={changePriorityTime}
               onGuestCountChange={changeGuestCount}
-              searchClassName="sticky top-[117px] z-20 -mt-1 pb-3 pt-1"
+              searchClassName="sticky top-[112px] z-20 -mt-1 pb-3 pt-1"
             />
           </div>
         )}
