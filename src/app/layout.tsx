@@ -1,38 +1,22 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { ReduxProvider } from "@/store/provider";
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { ReduxProvider } from '@/store/provider'
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ['latin', 'cyrillic'] })
 
 export const metadata: Metadata = {
-  title: "Hotel Cleaning",
-  description: "Hotel housekeeping management",
-  manifest: "/manifest.json",
-  themeColor: "#2563eb",
-};
+  title: 'Hotel Cleaning',
+  description: 'Hotel housekeeping management',
+  manifest: '/manifest.json',
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
+    <html>
+      <body className={inter.className}>
         <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
-  );
+  )
 }
