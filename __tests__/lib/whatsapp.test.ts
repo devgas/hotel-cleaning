@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildWhatsAppLink } from '@/lib/whatsapp/buildLink'
+import { buildWhatsAppAppLink, buildWhatsAppLink } from '@/lib/whatsapp/buildLink'
 
 describe('buildWhatsAppLink', () => {
   it('builds a valid wa.me link', () => {
@@ -16,6 +16,12 @@ describe('buildWhatsAppLink', () => {
 
   it('injects room number into template', () => {
     const link = buildWhatsAppLink('1234567890', 'Room {room} done', '303')
+    expect(link).toContain(encodeURIComponent('Room 303 done'))
+  })
+
+  it('builds a valid app link', () => {
+    const link = buildWhatsAppAppLink('+1234567890', 'Room {room} done', '303')
+    expect(link).toContain('whatsapp://send?phone=1234567890')
     expect(link).toContain(encodeURIComponent('Room 303 done'))
   })
 })

@@ -25,4 +25,5 @@ export interface AppSettings {
   whatsappEnabled: boolean
   whatsappPhone: string
   whatsappMessageTemplate: string
+  whatsappAllowAfterCleaned: boolean
 }

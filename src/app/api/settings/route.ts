@@ -8,6 +8,7 @@ const settingsSchema = z.object({
   whatsappEnabled: z.boolean().optional(),
   whatsappPhone: z.string().optional(),
   whatsappMessageTemplate: z.string().optional(),
+  whatsappAllowAfterCleaned: z.boolean().optional(),
 })
 
 export async function GET() {
@@ -27,6 +28,7 @@ export async function GET() {
     whatsappEnabled: map['whatsapp_enabled'] === 'true',
     whatsappPhone: map['whatsapp_phone'] ?? '',
     whatsappMessageTemplate: map['whatsapp_message_template'] ?? 'Кімната {room} прибрана',
+    whatsappAllowAfterCleaned: map['whatsapp_allow_after_cleaned'] === 'true',
   })
 }
 
@@ -51,6 +53,8 @@ export async function PUT(req: NextRequest) {
     updates.push(['whatsapp_phone', parsed.data.whatsappPhone])
   if (parsed.data.whatsappMessageTemplate !== undefined)
     updates.push(['whatsapp_message_template', parsed.data.whatsappMessageTemplate])
+  if (parsed.data.whatsappAllowAfterCleaned !== undefined)
+    updates.push(['whatsapp_allow_after_cleaned', String(parsed.data.whatsappAllowAfterCleaned)])
 
   await Promise.all(
     updates.map(([key, value]) =>

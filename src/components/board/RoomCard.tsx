@@ -3,7 +3,7 @@ import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useUpdateRoomStatusMutation, useUpdateRoomTypeMutation } from '@/store/api/dailyPlanApi'
 import { StatusBadge } from '@/components/common/StatusBadge'
-import { buildWhatsAppLink } from '@/lib/whatsapp/buildLink'
+import { buildWhatsAppAppLink, buildWhatsAppLink } from '@/lib/whatsapp/buildLink'
 import type { RoomWithStatus, CleaningStatus, RoomType } from '@/types'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -21,12 +21,20 @@ interface Props {
   whatsappEnabled: boolean
   whatsappPhone: string
   whatsappTemplate: string
+  whatsappAllowAfterCleaned: boolean
   isOnline: boolean
 }
 
 const statusCycle: CleaningStatus[] = ['not_cleaned_yet', 'cleaned', 'not_needed']
 
-export function RoomCard({ room, whatsappEnabled, whatsappPhone, whatsappTemplate, isOnline }: Props) {
+export function RoomCard({
+  room,
+  whatsappEnabled,
+  whatsappPhone,
+  whatsappTemplate,
+  whatsappAllowAfterCleaned,
+  isOnline,
+}: Props) {
   const t = useTranslations('board')
   const tCommon = useTranslations('common')
   const [updateStatus] = useUpdateRoomStatusMutation()
@@ -44,9 +52,22 @@ export function RoomCard({ room, whatsappEnabled, whatsappPhone, whatsappTemplat
   }
 
   function handleWhatsApp() {
-    const link = buildWhatsAppLink(whatsappPhone, whatsappTemplate, room.roomNumber)
-    window.open(link, '_blank')
-    updateStatus({ id: room.dailyPlanRoomId, status: 'cleaned', sendMessageUsed: true })
+    const webLink = buildWhatsAppLink(whatsappPhone, whatsappTemplate, room.roomNumber)
+    const appLink = buildWhatsAppAppLink(whatsappPhone, whatsappTemplate, room.roomNumber)
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(window.navigator.userAgent)
+
+    if (isMobile) {
+      window.location.href = appLink
+      window.setTimeout(() => {
+        window.location.href = webLink
+      }, 800)
+    } else {
+      window.open(webLink, '_blank', 'noopener,noreferrer')
+    }
+
+    if (room.status !== 'cleaned') {
+      updateStatus({ id: room.dailyPlanRoomId, status: 'cleaned', sendMessageUsed: true })
+    }
   }
 
   const statusLabels: Record<CleaningStatus, string> = {
@@ -56,6 +77,8 @@ export function RoomCard({ room, whatsappEnabled, whatsappPhone, whatsappTemplat
   }
 
   const roomTypeLabel = t(room.roomType)
+  const canSendWhatsApp =
+    whatsappEnabled && (room.status !== 'cleaned' || whatsappAllowAfterCleaned)
 
   function openEditor() {
     setDraftRoomType(room.roomType)
@@ -124,8 +147,8 @@ export function RoomCard({ room, whatsappEnabled, whatsappPhone, whatsappTemplat
           )}
         </div>
         <div className="flex items-center gap-2">
-          {whatsappEnabled && room.status !== 'cleaned' && (
-            <button onClick={handleWhatsApp} className="text-green-600 text-lg" title="WhatsApp">
+          {canSendWhatsApp && (
+            <button onClick={handleWhatsApp} className="text-green-600 text-lg" title={t('openWhatsApp')}>
               💬
             </button>
           )}

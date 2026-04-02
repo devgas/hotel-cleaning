@@ -78,6 +78,7 @@ export default function BoardPage() {
             whatsappEnabled={settings?.whatsappEnabled ?? false}
             whatsappPhone={settings?.whatsappPhone ?? ''}
             whatsappTemplate={settings?.whatsappMessageTemplate ?? ''}
+            whatsappAllowAfterCleaned={settings?.whatsappAllowAfterCleaned ?? false}
             isOnline={isOnline}
           />
         ))}

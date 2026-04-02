@@ -44,6 +44,16 @@ export function WhatsAppSettings({ settings, onChange }: Props) {
             />
             <p className="text-xs text-gray-400">{t('whatsappTemplateHint')}</p>
           </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="wa-after-cleaned"
+              checked={settings.whatsappAllowAfterCleaned ?? false}
+              onChange={(e) => onChange({ whatsappAllowAfterCleaned: e.target.checked })}
+              className="rounded"
+            />
+            <Label htmlFor="wa-after-cleaned">{t('whatsappAllowAfterCleaned')}</Label>
+          </div>
         </>
       )}
     </div>
