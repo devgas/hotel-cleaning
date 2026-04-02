@@ -209,37 +209,37 @@ export default function SetupPage() {
   return (
     <div>
       <Header title={t('title')} />
-      <div className={cn('px-4 space-y-4', selected.length > 0 && 'pb-36')}>
-        <div className="sticky top-[57px] z-30 bg-white pt-4 pb-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
-          <div className="grid h-auto w-full grid-cols-2 rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
-            <button
-              type="button"
-              onClick={() => setActiveTab('today')}
-              className={cn(
-                'h-auto rounded-lg px-3 py-2 text-left',
-                activeTab === 'today' ? 'bg-blue-600 text-white' : 'text-slate-600'
-              )}
-            >
-              <div className="text-left">
-                <div className="text-xs font-semibold uppercase tracking-wide">{t('today')}</div>
-                <div className="text-[11px] opacity-80">{formatTabDate(planDates.today)}</div>
-              </div>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('tomorrow')}
-              className={cn(
-                'h-auto rounded-lg px-3 py-2 text-left',
-                activeTab === 'tomorrow' ? 'bg-emerald-600 text-white' : 'text-slate-600'
-              )}
-            >
-              <div className="text-left">
-                <div className="text-xs font-semibold uppercase tracking-wide">{t('tomorrow')}</div>
-                <div className="text-[11px] opacity-80">{formatTabDate(planDates.tomorrow)}</div>
-              </div>
-            </button>
-          </div>
+      <div className="sticky top-[57px] z-30 bg-white px-4 pb-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
+        <div className="grid h-auto w-full grid-cols-2 rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
+          <button
+            type="button"
+            onClick={() => setActiveTab('today')}
+            className={cn(
+              'h-auto rounded-lg px-3 py-2 text-left',
+              activeTab === 'today' ? 'bg-blue-600 text-white' : 'text-slate-600'
+            )}
+          >
+            <div className="text-left">
+              <div className="text-xs font-semibold uppercase tracking-wide">{t('today')}</div>
+              <div className="text-[11px] opacity-80">{formatTabDate(planDates.today)}</div>
+            </div>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('tomorrow')}
+            className={cn(
+              'h-auto rounded-lg px-3 py-2 text-left',
+              activeTab === 'tomorrow' ? 'bg-emerald-600 text-white' : 'text-slate-600'
+            )}
+          >
+            <div className="text-left">
+              <div className="text-xs font-semibold uppercase tracking-wide">{t('tomorrow')}</div>
+              <div className="text-[11px] opacity-80">{formatTabDate(planDates.tomorrow)}</div>
+            </div>
+          </button>
         </div>
+      </div>
+      <div className={cn('px-4 pt-4 space-y-4', selected.length > 0 && 'pb-36')}>
         {activeTab === 'today' && (
           <div>
             <RoomSelector
