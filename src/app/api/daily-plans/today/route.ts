@@ -87,8 +87,41 @@ export async function DELETE(req: NextRequest) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  await prisma.dailyPlan.deleteMany({
-    where: { hotelId, date: today },
+  const plan = await prisma.dailyPlan.findUnique({
+    where: { hotelId_date: { hotelId, date: today } },
+    select: {
+      id: true,
+      rooms: {
+        select: { id: true },
+      },
+    },
+  })
+
+  if (!plan) {
+    console.log('[clear-plan] no-plan-found', {
+      userId,
+      hotelId,
+      date: today.toISOString(),
+    })
+    return NextResponse.json({ ok: true })
+  }
+
+  const planRoomIds = plan.rooms.map((room) => room.id)
+
+  await prisma.$transaction(async (tx) => {
+    if (planRoomIds.length > 0) {
+      await tx.statusHistory.deleteMany({
+        where: { dailyPlanRoomId: { in: planRoomIds } },
+      })
+    }
+
+    await tx.dailyPlanRoom.deleteMany({
+      where: { dailyPlanId: plan.id },
+    })
+
+    await tx.dailyPlan.delete({
+      where: { id: plan.id },
+    })
   })
 
   console.log('[clear-plan] success', {
