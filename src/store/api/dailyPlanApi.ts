@@ -1,5 +1,5 @@
 import { baseApi } from './baseApi'
-import type { RoomWithStatus, DailyPlanSummary } from '@/types'
+import type { RoomWithStatus, DailyPlanSummary, RoomType } from '@/types'
 
 interface DailyPlan {
   id: number
@@ -36,6 +36,17 @@ export const dailyPlanApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['DailyPlanRooms'],
     }),
+    updateRoomType: build.mutation<
+      { roomType: RoomType; priority: boolean },
+      { id: number; roomType: RoomType; priority?: boolean }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `/daily-plan-rooms/${id}/type`,
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: ['DailyPlanRooms'],
+    }),
   }),
 })
 
@@ -44,4 +55,5 @@ export const {
   useCreateDailyPlanMutation,
   useGetHistoryQuery,
   useUpdateRoomStatusMutation,
+  useUpdateRoomTypeMutation,
 } = dailyPlanApi
