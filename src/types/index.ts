@@ -3,6 +3,7 @@ export type CleaningStatus = 'not_cleaned_yet' | 'cleaned' | 'not_needed'
 
 export interface RoomWithStatus {
   id: number
+  roomId: number
   roomNumber: string
   roomType: RoomType
   priority: boolean

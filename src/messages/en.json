@@ -19,6 +19,8 @@
     "resetPassword": "Reset Password",
     "resetPasswordTitle": "Reset Password",
     "resetPasswordSuccess": "Password reset successful! Redirecting...",
+    "installAppTitle": "Install on your device",
+    "installAppMessage": "Open this app in your browser menu and choose Install App or Add to Home Screen for faster access.",
     "backToLogin": "Back to login"
   },
   "setup": {

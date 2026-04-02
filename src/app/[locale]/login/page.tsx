@@ -71,6 +71,10 @@ export default function LoginPage() {
               </Link>
             </p>
           </form>
+          <div className="mt-6 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm text-blue-900">
+            <p className="font-medium">{t('installAppTitle')}</p>
+            <p className="mt-1 text-blue-800">{t('installAppMessage')}</p>
+          </div>
         </CardContent>
       </Card>
     </div>
