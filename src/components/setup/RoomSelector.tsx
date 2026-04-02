@@ -1,5 +1,4 @@
 'use client'
-import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { defaultPriorityTime, priorityTimeOptions } from '@/lib/dailyPlans/priorityTime'
 import { cn } from '@/lib/utils'
@@ -26,7 +25,8 @@ interface Props {
   onPriorityChange: (roomId: number, priority: boolean) => void
   onPriorityTimeChange: (roomId: number, priorityTime: string) => void
   onGuestCountChange: (roomId: number, guestCount: number) => void
-  searchClassName?: string
+  search: string
+  onSearchChange: (value: string) => void
 }
 
 export function RoomSelector({
@@ -37,10 +37,10 @@ export function RoomSelector({
   onPriorityChange,
   onPriorityTimeChange,
   onGuestCountChange,
-  searchClassName,
+  search,
+  onSearchChange,
 }: Props) {
   const t = useTranslations('setup')
-  const [search, setSearch] = useState('')
 
   const getSelected = (id: number) => selected.find((s) => s.roomId === id)
 
@@ -49,17 +49,7 @@ export function RoomSelector({
   )
 
   return (
-    <div className="space-y-3">
-      <div className={cn('border-b border-gray-200 bg-white', searchClassName)}>
-        <input
-          type="text"
-          placeholder={t('search')}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div className="space-y-2">
+    <div className="space-y-2">
         {filtered.map((room) => {
           const sel = getSelected(room.id)
           return (
@@ -176,7 +166,6 @@ export function RoomSelector({
             </div>
           )
         })}
-      </div>
     </div>
   )
 }

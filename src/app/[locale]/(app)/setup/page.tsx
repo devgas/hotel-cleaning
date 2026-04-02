@@ -63,6 +63,7 @@ export default function SetupPage() {
   const [activeTab, setActiveTab] = useState<PlanTab>('today')
   const [createPlan, { isLoading }] = useCreateDailyPlanMutation()
   const [savedTab, setSavedTab] = useState<PlanTab | null>(null)
+  const [search, setSearch] = useState('')
   const [selectedOverrides, setSelectedOverrides] = useState<Partial<Record<PlanTab, SelectedRoom[]>>>({})
   const planDates = useSyncExternalStore(
     subscribeToPlanDates,
@@ -213,7 +214,7 @@ export default function SetupPage() {
         <div className="grid h-auto w-full grid-cols-2 rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
           <button
             type="button"
-            onClick={() => setActiveTab('today')}
+            onClick={() => { setActiveTab('today'); setSearch('') }}
             className={cn(
               'h-auto rounded-lg px-3 py-2 text-left',
               activeTab === 'today' ? 'bg-blue-600 text-white' : 'text-slate-600'
@@ -226,7 +227,7 @@ export default function SetupPage() {
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('tomorrow')}
+            onClick={() => { setActiveTab('tomorrow'); setSearch('') }}
             className={cn(
               'h-auto rounded-lg px-3 py-2 text-left',
               activeTab === 'tomorrow' ? 'bg-emerald-600 text-white' : 'text-slate-600'
@@ -238,6 +239,13 @@ export default function SetupPage() {
             </div>
           </button>
         </div>
+        <input
+          type="text"
+          placeholder={t('search')}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="mt-3 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
       <div className={cn('px-4 pt-4 space-y-4', selected.length > 0 && 'pb-36')}>
         {activeTab === 'today' && (
@@ -250,7 +258,8 @@ export default function SetupPage() {
               onPriorityChange={changePriority}
               onPriorityTimeChange={changePriorityTime}
               onGuestCountChange={changeGuestCount}
-              searchClassName="sticky top-[112px] z-20 -mt-1 pb-3 pt-1"
+              search={search}
+              onSearchChange={setSearch}
             />
           </div>
         )}
@@ -264,7 +273,8 @@ export default function SetupPage() {
               onPriorityChange={changePriority}
               onPriorityTimeChange={changePriorityTime}
               onGuestCountChange={changeGuestCount}
-              searchClassName="sticky top-[112px] z-20 -mt-1 pb-3 pt-1"
+              search={search}
+              onSearchChange={setSearch}
             />
           </div>
         )}
