@@ -36,6 +36,7 @@ export async function GET() {
       roomType: r.roomType,
       priority: r.priority,
       priorityTime: r.priorityTime,
+      guestCount: r.guestCount,
       status: r.status,
       updatedBy: r.updatedBy?.name ?? null,
       updatedAt: r.updatedAt.toISOString(),
