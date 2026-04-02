@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('')
   const [adminPassword, setAdminPassword] = useState('')
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
@@ -28,7 +29,8 @@ export default function RegisterPage() {
       body: JSON.stringify({ name, password, adminPassword }),
     })
     if (res.ok) {
-      router.push(`/${locale}/login`)
+      setSuccess(true)
+      setTimeout(() => router.push(`/${locale}/login`), 1500)
     } else {
       const data = await res.json()
       setError(typeof data.error === 'string' ? data.error : JSON.stringify(data.error))
@@ -57,6 +59,7 @@ export default function RegisterPage() {
               <Input id="adminPassword" type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} required />
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
+            {success && <p className="text-green-600 text-sm text-center">✓ {t('registerSuccess')}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? '...' : t('register')}
             </Button>

@@ -1,7 +1,12 @@
-import { PrismaClient } from '../src/generated/prisma'
+import { config } from 'dotenv'
+config({ path: '.env.local' })
+
+import { PrismaClient } from '../src/generated/prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
 import bcrypt from 'bcryptjs'
 
-const prisma = new PrismaClient()
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
+const prisma = new PrismaClient({ adapter })
 
 async function main() {
   const hotel = await prisma.hotel.upsert({
@@ -10,11 +15,12 @@ async function main() {
     create: { name: 'My Hotel' },
   })
 
-  const adminPasswordHash = await bcrypt.hash('admin123', 12)
+  const adminPassword = process.env.ADMIN_PASSWORD ?? 'admin123'
+  const adminPasswordHash = await bcrypt.hash(adminPassword, 12)
 
   await prisma.appSetting.upsert({
     where: { hotelId_key: { hotelId: hotel.id, key: 'admin_password_hash' } },
-    update: {},
+    update: { value: adminPasswordHash },
     create: { hotelId: hotel.id, key: 'admin_password_hash', value: adminPasswordHash },
   })
 
@@ -50,7 +56,7 @@ async function main() {
     })
   }
 
-  console.log('Seed complete. Admin password: admin123')
+  console.log(`Seed complete. Admin password: ${adminPassword}`)
 }
 
 main()
