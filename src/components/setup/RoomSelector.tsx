@@ -72,16 +72,18 @@ export function RoomSelector({
               )}
             >
               <div className="flex items-start gap-3">
-                <button
-                  onClick={(e) => { e.stopPropagation(); onToggle(room.id) }}
-                  className={cn(
-                    'w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5',
-                    sel ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
-                  )}
-                >
-                  {sel && <span className="text-white text-xs">✓</span>}
-                </button>
-                <span className="font-medium text-gray-900 mt-0.5">{room.roomNumber}</span>
+                <div className="flex items-center gap-3 h-[26px] flex-shrink-0">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onToggle(room.id) }}
+                    className={cn(
+                      'w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0',
+                      sel ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
+                    )}
+                  >
+                    {sel && <span className="text-white text-xs">✓</span>}
+                  </button>
+                  <span className="font-medium text-gray-900">{room.roomNumber}</span>
+                </div>
                 {sel && (
                   <div className="ml-auto grid grid-cols-[auto_auto] items-center gap-x-2 gap-y-1.5">
                     {/* Row 1: room type | guest count */}
