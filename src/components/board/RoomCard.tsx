@@ -46,6 +46,7 @@ export function RoomCard({
   const [draftRoomType, setDraftRoomType] = useState<RoomType>(room.roomType)
   const [draftPriority, setDraftPriority] = useState(room.priority)
   const [draftPriorityTime, setDraftPriorityTime] = useState(room.priorityTime ?? defaultPriorityTime)
+  const [draftGuestCount, setDraftGuestCount] = useState(room.guestCount)
   const longPressTimeoutRef = useRef<number | null>(null)
   const chatLink = normalizeWhatsAppChatLink(whatsappChatLink)
   const whatsappMessage = whatsappTemplate.replace('{room}', room.roomNumber)
@@ -105,6 +106,7 @@ export function RoomCard({
     setDraftRoomType(room.roomType)
     setDraftPriority(room.priority)
     setDraftPriorityTime(room.priorityTime ?? defaultPriorityTime)
+    setDraftGuestCount(room.guestCount)
     setIsEditorOpen(true)
   }
 
@@ -148,6 +150,7 @@ export function RoomCard({
       roomType: draftRoomType,
       priority: draftPriority,
       priorityTime: draftPriority ? draftPriorityTime : null,
+      guestCount: draftGuestCount,
     }).unwrap()
     setIsEditorOpen(false)
   }
@@ -172,6 +175,11 @@ export function RoomCard({
             {room.priority && (
               <span className="text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">
                 ★ {room.priorityTime ?? defaultPriorityTime}
+              </span>
+            )}
+            {room.guestCount > 1 && (
+              <span className="text-xs bg-green-50 text-green-700 px-1.5 py-0.5 rounded">
+                👤 {room.guestCount}
               </span>
             )}
             <span className="text-xs text-gray-400">{roomTypeLabel}</span>
@@ -215,6 +223,28 @@ export function RoomCard({
                     {t(type)}
                   </button>
                 ))}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-700">Guests</p>
+              <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2">
+                <button
+                  onClick={() => setDraftGuestCount((n) => Math.max(1, n - 1))}
+                  disabled={draftGuestCount <= 1}
+                  className="w-8 h-8 rounded-full bg-gray-200 text-gray-600 font-bold text-lg disabled:opacity-30"
+                >
+                  −
+                </button>
+                <span className="flex-1 text-center text-xl font-bold text-gray-900">
+                  {draftGuestCount}
+                </span>
+                <button
+                  onClick={() => setDraftGuestCount((n) => Math.min(5, n + 1))}
+                  disabled={draftGuestCount >= 5}
+                  className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-lg disabled:opacity-30"
+                >
+                  +
+                </button>
               </div>
             </div>
             <button
