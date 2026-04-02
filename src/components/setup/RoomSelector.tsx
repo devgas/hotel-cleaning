@@ -83,7 +83,7 @@ export function RoomSelector({
                 </button>
                 <span className="font-medium text-gray-900">{room.roomNumber}</span>
                 {sel && (
-                  <div className="ml-auto flex flex-col items-end gap-1.5">
+                  <div className="ml-auto flex flex-col items-start gap-1.5">
                     {/* Row 1: room type + guest count */}
                     <div className="flex items-center gap-2">
                       <div className="flex rounded-lg overflow-hidden border border-gray-200 text-xs">
