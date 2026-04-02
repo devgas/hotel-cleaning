@@ -40,9 +40,9 @@ export function WhatsAppSettings({ settings, onChange }: Props) {
             <Input
               value={settings.whatsappMessageTemplate ?? ''}
               onChange={(e) => onChange({ whatsappMessageTemplate: e.target.value })}
-              placeholder="Кімната {room} прибрана"
+              placeholder={t('whatsappTemplatePlaceholder')}
             />
-            <p className="text-xs text-gray-400">Use {'{room}'} to insert room number</p>
+            <p className="text-xs text-gray-400">{t('whatsappTemplateHint')}</p>
           </div>
         </>
       )}

@@ -12,7 +12,8 @@
     "adminPassword": "Admin Password",
     "logout": "Sign Out",
     "loginTitle": "Sign In",
-    "registerTitle": "Register"
+    "registerTitle": "Register",
+    "registerSuccess": "Registration successful! Redirecting..."
   },
   "setup": {
     "title": "Today's Setup",
@@ -54,8 +55,16 @@
     "whatsappPhone": "Phone Number",
     "whatsappTemplate": "Message Template",
     "language": "Language",
+    "languageUkrainian": "Ukrainian",
+    "languageEnglish": "English",
+    "whatsappTemplateHint": "Use {room} to insert room number",
+    "whatsappTemplatePlaceholder": "Room {room} cleaned",
     "save": "Save",
-    "saved": "Saved"
+    "saved": "Saved",
+    "clearPlan": "Clear Today's Plan",
+    "clearPlanConfirm": "Enter admin password to clear today's plan:",
+    "clearPlanSuccess": "Plan cleared",
+    "clearPlanError": "Invalid admin password"
   },
   "common": {
     "loading": "Loading...",

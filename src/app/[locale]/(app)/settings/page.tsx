@@ -11,12 +11,17 @@ import type { AppSettings } from '@/types'
 
 export default function SettingsPage() {
   const t = useTranslations('settings')
+  const tCommon = useTranslations('common')
   const { locale } = useParams<{ locale: string }>()
   const router = useRouter()
   const { data: remoteSettings } = useGetSettingsQuery()
   const [updateSettings, { isLoading }] = useUpdateSettingsMutation()
   const [localSettings, setLocalSettings] = useState<Partial<AppSettings>>({})
   const [saved, setSaved] = useState(false)
+  const [clearPassword, setClearPassword] = useState('')
+  const [showClearDialog, setShowClearDialog] = useState(false)
+  const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [clearLoading, setClearLoading] = useState(false)
 
   useEffect(() => {
     if (remoteSettings) setLocalSettings(remoteSettings)
@@ -24,6 +29,24 @@ export default function SettingsPage() {
 
   function merge(patch: Partial<AppSettings>) {
     setLocalSettings((prev) => ({ ...prev, ...patch }))
+  }
+
+  async function handleClearPlan() {
+    setClearLoading(true)
+    setClearStatus('idle')
+    const res = await fetch('/api/daily-plans/today', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ adminPassword: clearPassword }),
+    })
+    if (res.ok) {
+      setClearStatus('success')
+      setClearPassword('')
+      setTimeout(() => { setShowClearDialog(false); setClearStatus('idle') }, 1500)
+    } else {
+      setClearStatus('error')
+    }
+    setClearLoading(false)
   }
 
   async function handleSave() {
@@ -54,7 +77,7 @@ export default function SettingsPage() {
                     : 'border-gray-200 text-gray-600'
                 }`}
               >
-                {lang === 'uk' ? 'Українська' : 'English'}
+                {t(lang === 'uk' ? 'languageUkrainian' : 'languageEnglish')}
               </button>
             ))}
           </div>
@@ -62,6 +85,45 @@ export default function SettingsPage() {
         <Button onClick={handleSave} className="w-full" disabled={isLoading}>
           {saved ? t('saved') : t('save')}
         </Button>
+
+        <div className="space-y-2 pt-2 border-t border-gray-100">
+          {!showClearDialog ? (
+            <button
+              onClick={() => { setShowClearDialog(true); setClearStatus('idle') }}
+              className="w-full px-4 py-2 rounded-lg border border-red-200 text-red-600 text-sm font-medium hover:bg-red-50 transition-colors"
+            >
+              {t('clearPlan')}
+            </button>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-sm text-gray-600">{t('clearPlanConfirm')}</p>
+              <input
+                type="password"
+                value={clearPassword}
+                onChange={(e) => setClearPassword(e.target.value)}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                autoFocus
+              />
+              {clearStatus === 'error' && <p className="text-red-500 text-sm">{t('clearPlanError')}</p>}
+              {clearStatus === 'success' && <p className="text-green-600 text-sm">✓ {t('clearPlanSuccess')}</p>}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setShowClearDialog(false); setClearPassword(''); setClearStatus('idle') }}
+                  className="flex-1 px-4 py-2 rounded-lg border border-gray-200 text-gray-600 text-sm"
+                >
+                  {tCommon('cancel')}
+                </button>
+                <button
+                  onClick={handleClearPlan}
+                  disabled={clearLoading || !clearPassword}
+                  className="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium disabled:opacity-50"
+                >
+                  {clearLoading ? '...' : t('clearPlan')}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -54,8 +54,16 @@
     "whatsappPhone": "Номер телефону",
     "whatsappTemplate": "Шаблон повідомлення",
     "language": "Мова",
+    "languageUkrainian": "Українська",
+    "languageEnglish": "English",
+    "whatsappTemplateHint": "Використовуйте {room} для вставки номера кімнати",
+    "whatsappTemplatePlaceholder": "Кімната {room} прибрана",
     "save": "Зберегти",
-    "saved": "Збережено"
+    "saved": "Збережено",
+    "clearPlan": "Очистити план на сьогодні",
+    "clearPlanConfirm": "Введіть пароль адміна для очищення плану:",
+    "clearPlanSuccess": "План очищено",
+    "clearPlanError": "Невірний пароль адміна"
   },
   "common": {
     "loading": "Завантаження...",

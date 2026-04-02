@@ -49,14 +49,15 @@ export function RoomSelector({ rooms, selected, onToggle, onTypeChange, onPriori
           return (
             <div
               key={room.id}
+              onClick={() => onToggle(room.id)}
               className={cn(
-                'rounded-xl border p-3 transition-colors',
+                'rounded-xl border p-3 transition-colors cursor-pointer active:opacity-80',
                 sel ? 'border-blue-400 bg-blue-50' : 'border-gray-200 bg-white'
               )}
             >
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => onToggle(room.id)}
+                  onClick={(e) => { e.stopPropagation(); onToggle(room.id) }}
                   className={cn(
                     'w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0',
                     sel ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
@@ -71,7 +72,7 @@ export function RoomSelector({ rooms, selected, onToggle, onTypeChange, onPriori
                       {(['checkout', 'stayover'] as RoomType[]).map((type) => (
                         <button
                           key={type}
-                          onClick={() => onTypeChange(room.id, type)}
+                          onClick={(e) => { e.stopPropagation(); onTypeChange(room.id, type) }}
                           className={cn(
                             'px-2 py-1',
                             sel.roomType === type ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'
@@ -83,7 +84,7 @@ export function RoomSelector({ rooms, selected, onToggle, onTypeChange, onPriori
                     </div>
                     {sel.roomType === 'checkout' && (
                       <button
-                        onClick={() => onPriorityChange(room.id, !sel.priority)}
+                        onClick={(e) => { e.stopPropagation(); onPriorityChange(room.id, !sel.priority) }}
                         className={cn(
                           'text-xs px-2 py-1 rounded-lg border',
                           sel.priority ? 'bg-orange-100 border-orange-300 text-orange-700' : 'border-gray-200 text-gray-400'
