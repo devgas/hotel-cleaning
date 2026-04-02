@@ -62,6 +62,7 @@ export default function SetupPage() {
   const { data: rooms = [] } = useGetRoomsQuery()
   const [activeTab, setActiveTab] = useState<PlanTab>('today')
   const [createPlan, { isLoading }] = useCreateDailyPlanMutation()
+  const [savedTab, setSavedTab] = useState<PlanTab | null>(null)
   const [selectedOverrides, setSelectedOverrides] = useState<Partial<Record<PlanTab, SelectedRoom[]>>>({})
   const planDates = useSyncExternalStore(
     subscribeToPlanDates,
@@ -199,6 +200,9 @@ export default function SetupPage() {
     await createPlan({ date: activeDateStr, rooms: selected })
     if (activeTab === 'today') {
       router.push(`/${locale}/board`)
+    } else {
+      setSavedTab(activeTab)
+      window.setTimeout(() => setSavedTab(null), 2500)
     }
   }
 
@@ -275,7 +279,7 @@ export default function SetupPage() {
               activeTab === 'today' ? 'bg-blue-600' : 'bg-emerald-600'
             )}
           >
-            {isLoading ? '...' : `${t('save')} ${activePlanLabel} (${selected.length})`}
+            {isLoading ? '...' : savedTab === activeTab ? `${t('saved')} ${activePlanLabel}` : `${t('save')} ${activePlanLabel} (${selected.length})`}
           </button>
         </div>
       )}

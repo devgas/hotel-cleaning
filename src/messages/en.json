@@ -30,6 +30,7 @@
     "editingDate": "Editing {date}",
     "search": "Search room",
     "save": "Save Plan",
+    "saved": "Saved",
     "confirmOverride": "Saving will override the current plan for {date}. Continue?",
     "checkout": "Checkout",
     "stayover": "Stayover",
