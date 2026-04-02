@@ -15,6 +15,7 @@ interface SelectedRoom {
   roomType: RoomType
   priority: boolean
   priorityTime?: string | null
+  guestCount: number
 }
 
 type PlanTab = 'today' | 'tomorrow'
@@ -91,6 +92,7 @@ export default function SetupPage() {
           roomType: room.roomType,
           priority: room.priority,
           priorityTime: room.priorityTime ?? null,
+          guestCount: room.guestCount,
         })) ?? [],
       tomorrow:
         tomorrowPlan?.rooms.map((room) => ({
@@ -98,6 +100,7 @@ export default function SetupPage() {
           roomType: room.roomType,
           priority: room.priority,
           priorityTime: room.priorityTime ?? null,
+          guestCount: room.guestCount,
         })) ?? [],
     }),
     [todayPlan, tomorrowPlan]
@@ -130,6 +133,7 @@ export default function SetupPage() {
         roomType: room.roomType,
         priority: room.priority,
         priorityTime: room.priorityTime ?? null,
+        guestCount: room.guestCount,
       })) ?? []
     )
   }
@@ -138,7 +142,7 @@ export default function SetupPage() {
     updateSelected((prev) =>
       prev.some((r) => r.roomId === roomId)
         ? prev.filter((r) => r.roomId !== roomId)
-        : [...prev, { roomId, roomType: 'stayover', priority: false, priorityTime: null }]
+        : [...prev, { roomId, roomType: 'stayover', priority: false, priorityTime: null, guestCount: 1 }]
     )
   }
 
@@ -175,6 +179,12 @@ export default function SetupPage() {
   function changePriorityTime(roomId: number, priorityTime: string) {
     updateSelected((prev) =>
       prev.map((r) => (r.roomId === roomId ? { ...r, priorityTime } : r))
+    )
+  }
+
+  function changeGuestCount(roomId: number, guestCount: number) {
+    updateSelected((prev) =>
+      prev.map((r) => (r.roomId === roomId ? { ...r, guestCount } : r))
     )
   }
 
@@ -235,6 +245,7 @@ export default function SetupPage() {
               onTypeChange={changeType}
               onPriorityChange={changePriority}
               onPriorityTimeChange={changePriorityTime}
+              onGuestCountChange={changeGuestCount}
               searchClassName="sticky top-[117px] z-20 -mt-1 pb-3 pt-1"
             />
           </div>
@@ -248,6 +259,7 @@ export default function SetupPage() {
               onTypeChange={changeType}
               onPriorityChange={changePriority}
               onPriorityTimeChange={changePriorityTime}
+              onGuestCountChange={changeGuestCount}
               searchClassName="sticky top-[117px] z-20 -mt-1 pb-3 pt-1"
             />
           </div>
