@@ -12,7 +12,8 @@
     "adminPassword": "Пароль адміна",
     "logout": "Вийти",
     "loginTitle": "Вхід",
-    "registerTitle": "Реєстрація",\n    "registerSuccess": "Реєстрація успішна! Перенаправлення..."
+    "registerTitle": "Реєстрація",
+    "registerSuccess": "Реєстрація успішна! Перенаправлення..."
   },
   "setup": {
     "title": "Налаштування на сьогодні",
