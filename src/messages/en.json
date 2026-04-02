@@ -62,9 +62,9 @@
     "save": "Save",
     "saved": "Saved",
     "clearPlan": "Clear Today's Plan",
-    "clearPlanConfirm": "Enter admin password to clear today's plan:",
+    "clearPlanConfirm": "Enter your password to clear today's plan:",
     "clearPlanSuccess": "Plan cleared",
-    "clearPlanError": "Invalid admin password"
+    "clearPlanError": "Invalid password"
   },
   "common": {
     "loading": "Loading...",

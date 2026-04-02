@@ -62,9 +62,9 @@
     "save": "Зберегти",
     "saved": "Збережено",
     "clearPlan": "Очистити план на сьогодні",
-    "clearPlanConfirm": "Введіть пароль адміна для очищення плану:",
+    "clearPlanConfirm": "Введіть свій пароль для очищення плану:",
     "clearPlanSuccess": "План очищено",
-    "clearPlanError": "Невірний пароль адміна"
+    "clearPlanError": "Невірний пароль"
   },
   "common": {
     "loading": "Завантаження...",

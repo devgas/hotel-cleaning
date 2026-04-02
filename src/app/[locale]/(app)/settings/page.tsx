@@ -37,7 +37,7 @@ export default function SettingsPage() {
     const res = await fetch('/api/daily-plans/today', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ adminPassword: clearPassword }),
+      body: JSON.stringify({ password: clearPassword }),
     })
     if (res.ok) {
       setClearStatus('success')
