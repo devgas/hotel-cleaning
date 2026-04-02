@@ -15,6 +15,7 @@ interface SelectedRoom {
   roomType: RoomType
   priority: boolean
   priorityTime?: string | null
+  guestCount: number
 }
 
 interface Props {
@@ -24,6 +25,7 @@ interface Props {
   onTypeChange: (roomId: number, type: RoomType) => void
   onPriorityChange: (roomId: number, priority: boolean) => void
   onPriorityTimeChange: (roomId: number, priorityTime: string) => void
+  onGuestCountChange: (roomId: number, guestCount: number) => void
   searchClassName?: string
 }
 
@@ -34,6 +36,7 @@ export function RoomSelector({
   onTypeChange,
   onPriorityChange,
   onPriorityTimeChange,
+  onGuestCountChange,
   searchClassName,
 }: Props) {
   const t = useTranslations('setup')
@@ -127,6 +130,34 @@ export function RoomSelector({
                         )}
                       </>
                     )}
+                    <div
+                      className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 py-1"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onGuestCountChange(room.id, Math.max(1, sel.guestCount - 1))
+                        }}
+                        disabled={sel.guestCount <= 1}
+                        className="w-5 h-5 rounded-full bg-gray-200 text-gray-600 font-bold text-xs disabled:opacity-30 flex items-center justify-center"
+                      >
+                        −
+                      </button>
+                      <span className="text-xs font-bold text-gray-700 min-w-[28px] text-center">
+                        👤 {sel.guestCount}
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onGuestCountChange(room.id, Math.min(5, sel.guestCount + 1))
+                        }}
+                        disabled={sel.guestCount >= 5}
+                        className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs disabled:opacity-30 flex items-center justify-center"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
