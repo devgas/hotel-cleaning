@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildWhatsAppAppLink, buildWhatsAppLink } from '@/lib/whatsapp/buildLink'
+import { buildWhatsAppAppLink, buildWhatsAppLink, normalizeWhatsAppChatLink } from '@/lib/whatsapp/buildLink'
 
 describe('buildWhatsAppLink', () => {
   it('builds a valid wa.me link', () => {
@@ -23,5 +23,10 @@ describe('buildWhatsAppLink', () => {
     const link = buildWhatsAppAppLink('+1234567890', 'Room {room} done', '303')
     expect(link).toContain('whatsapp://send?phone=1234567890')
     expect(link).toContain(encodeURIComponent('Room 303 done'))
+  })
+
+  it('keeps a whatsapp chat invite link intact', () => {
+    const link = normalizeWhatsAppChatLink(' https://chat.whatsapp.com/EgpjGRY914PLu6ItPU0K5V?mode=gi_t ')
+    expect(link).toBe('https://chat.whatsapp.com/EgpjGRY914PLu6ItPU0K5V?mode=gi_t')
   })
 })

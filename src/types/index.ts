@@ -23,6 +23,7 @@ export interface DailyPlanSummary {
 export interface AppSettings {
   defaultLanguage: string
   whatsappEnabled: boolean
+  whatsappChatLink: string
   whatsappPhone: string
   whatsappMessageTemplate: string
   whatsappAllowAfterCleaned: boolean

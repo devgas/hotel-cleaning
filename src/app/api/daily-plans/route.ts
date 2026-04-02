@@ -20,20 +20,66 @@ export async function POST(req: NextRequest) {
 
   const existing = await prisma.dailyPlan.findUnique({
     where: { hotelId_date: { hotelId, date: today } },
+    include: {
+      rooms: {
+        select: {
+          id: true,
+          roomId: true,
+        },
+      },
+    },
   })
 
   if (existing) {
-    await prisma.dailyPlanRoom.deleteMany({ where: { dailyPlanId: existing.id } })
-    await prisma.dailyPlanRoom.createMany({
-      data: parsed.data.rooms.map((r) => ({
-        dailyPlanId: existing.id,
-        roomId: r.roomId,
-        roomType: r.roomType,
-        priority: r.priority,
-        status: 'not_cleaned_yet' as const,
-        updatedByUserId: userId,
-      })),
+    const selectedRoomIds = new Set(parsed.data.rooms.map((room) => room.roomId))
+    const roomsToRemove = existing.rooms.filter((room) => !selectedRoomIds.has(room.roomId))
+    const roomIdsToRemove = roomsToRemove.map((room) => room.id)
+    const existingRoomMap = new Map(existing.rooms.map((room) => [room.roomId, room.id]))
+
+    await prisma.$transaction(async (tx) => {
+      if (roomIdsToRemove.length > 0) {
+        await tx.statusHistory.deleteMany({
+          where: { dailyPlanRoomId: { in: roomIdsToRemove } },
+        })
+
+        await tx.dailyPlanRoom.deleteMany({
+          where: { id: { in: roomIdsToRemove } },
+        })
+      }
+
+      for (const room of parsed.data.rooms) {
+        const existingPlanRoomId = existingRoomMap.get(room.roomId)
+
+        if (existingPlanRoomId) {
+          await tx.dailyPlanRoom.update({
+            where: { id: existingPlanRoomId },
+            data: {
+              roomType: room.roomType,
+              priority: room.priority,
+              updatedByUserId: userId,
+            },
+          })
+          continue
+        }
+
+        await tx.dailyPlanRoom.create({
+          data: {
+            dailyPlanId: existing.id,
+            roomId: room.roomId,
+            roomType: room.roomType,
+            priority: room.priority,
+            status: 'not_cleaned_yet',
+            updatedByUserId: userId,
+          },
+        })
+      }
+
+      await tx.dailyPlan.update({
+        where: { id: existing.id },
+        data: { createdByUserId: userId },
+      })
     })
+
     return NextResponse.json({ id: existing.id }, { status: 200 })
   }
 

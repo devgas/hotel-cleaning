@@ -2,6 +2,7 @@
   "nav": {
     "board": "Board",
     "history": "History",
+    "plan": "Plan",
     "settings": "Settings"
   },
   "auth": {
@@ -24,6 +25,7 @@
     "title": "Today's Setup",
     "search": "Search room",
     "save": "Save Plan",
+    "confirmOverride": "Saving will override the current plan for today. Continue?",
     "checkout": "Checkout",
     "stayover": "Stayover",
     "priority": "Priority",
@@ -35,6 +37,7 @@
     "priority": "Priority",
     "checkout": "Checkout",
     "stayover": "Stayover",
+    "editPlan": "Edit Plan",
     "editRoom": "Edit Room",
     "roomType": "Room Type",
     "saveChanges": "Save Changes",
@@ -61,6 +64,8 @@
     "deleteRoom": "Delete",
     "whatsapp": "WhatsApp",
     "whatsappEnabled": "Enable WhatsApp",
+    "whatsappChatLink": "Chat Link",
+    "whatsappChatLinkHint": "Optional. If set, the app opens this WhatsApp chat/group link instead of using the phone number.",
     "whatsappPhone": "Phone Number",
     "whatsappTemplate": "Message Template",
     "whatsappAllowAfterCleaned": "Allow opening WhatsApp even when room is already cleaned",

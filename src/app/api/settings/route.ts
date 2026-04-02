@@ -6,6 +6,7 @@ import { z } from 'zod'
 const settingsSchema = z.object({
   defaultLanguage: z.enum(['uk', 'en']).optional(),
   whatsappEnabled: z.boolean().optional(),
+  whatsappChatLink: z.string().optional(),
   whatsappPhone: z.string().optional(),
   whatsappMessageTemplate: z.string().optional(),
   whatsappAllowAfterCleaned: z.boolean().optional(),
@@ -26,6 +27,7 @@ export async function GET() {
   return NextResponse.json({
     defaultLanguage: map['default_language'] ?? 'uk',
     whatsappEnabled: map['whatsapp_enabled'] === 'true',
+    whatsappChatLink: map['whatsapp_chat_link'] ?? '',
     whatsappPhone: map['whatsapp_phone'] ?? '',
     whatsappMessageTemplate: map['whatsapp_message_template'] ?? 'Кімната {room} прибрана',
     whatsappAllowAfterCleaned: map['whatsapp_allow_after_cleaned'] === 'true',
@@ -49,6 +51,8 @@ export async function PUT(req: NextRequest) {
     updates.push(['default_language', parsed.data.defaultLanguage])
   if (parsed.data.whatsappEnabled !== undefined)
     updates.push(['whatsapp_enabled', String(parsed.data.whatsappEnabled)])
+  if (parsed.data.whatsappChatLink !== undefined)
+    updates.push(['whatsapp_chat_link', parsed.data.whatsappChatLink])
   if (parsed.data.whatsappPhone !== undefined)
     updates.push(['whatsapp_phone', parsed.data.whatsappPhone])
   if (parsed.data.whatsappMessageTemplate !== undefined)

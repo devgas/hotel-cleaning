@@ -76,6 +76,7 @@ export default function BoardPage() {
             key={room.dailyPlanRoomId}
             room={room}
             whatsappEnabled={settings?.whatsappEnabled ?? false}
+            whatsappChatLink={settings?.whatsappChatLink ?? ''}
             whatsappPhone={settings?.whatsappPhone ?? ''}
             whatsappTemplate={settings?.whatsappMessageTemplate ?? ''}
             whatsappAllowAfterCleaned={settings?.whatsappAllowAfterCleaned ?? false}

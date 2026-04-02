@@ -9,3 +9,7 @@ export function buildWhatsAppAppLink(phone: string, template: string, roomNumber
   const message = template.replace('{room}', roomNumber)
   return `whatsapp://send?phone=${cleanPhone}&text=${encodeURIComponent(message)}`
 }
+
+export function normalizeWhatsAppChatLink(chatLink: string): string {
+  return chatLink.trim()
+}

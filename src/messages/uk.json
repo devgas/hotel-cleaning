@@ -2,6 +2,7 @@
   "nav": {
     "board": "Дошка",
     "history": "Історія",
+    "plan": "План",
     "settings": "Налаштування"
   },
   "auth": {
@@ -24,6 +25,7 @@
     "title": "Налаштування на сьогодні",
     "search": "Пошук кімнати",
     "save": "Зберегти план",
+    "confirmOverride": "Збереження перезапише поточний план на сьогодні. Продовжити?",
     "checkout": "Виїзд",
     "stayover": "Проживання",
     "priority": "Пріоритет",
@@ -35,6 +37,7 @@
     "priority": "Пріоритетні",
     "checkout": "Виїзд",
     "stayover": "Проживання",
+    "editPlan": "Редагувати план",
     "editRoom": "Редагувати кімнату",
     "roomType": "Тип кімнати",
     "saveChanges": "Зберегти зміни",
@@ -61,6 +64,8 @@
     "deleteRoom": "Видалити",
     "whatsapp": "WhatsApp",
     "whatsappEnabled": "Увімкнути WhatsApp",
+    "whatsappChatLink": "Посилання на чат",
+    "whatsappChatLinkHint": "Необов’язково. Якщо заповнено, застосунок відкриває це посилання на чат/групу WhatsApp замість номера телефону.",
     "whatsappPhone": "Номер телефону",
     "whatsappTemplate": "Шаблон повідомлення",
     "whatsappAllowAfterCleaned": "Дозволити відкривати WhatsApp навіть якщо кімната вже прибрана",

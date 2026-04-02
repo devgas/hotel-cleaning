@@ -28,6 +28,15 @@ export function WhatsAppSettings({ settings, onChange }: Props) {
       {settings.whatsappEnabled && (
         <>
           <div className="space-y-1">
+            <Label>{t('whatsappChatLink')}</Label>
+            <Input
+              value={settings.whatsappChatLink ?? ''}
+              onChange={(e) => onChange({ whatsappChatLink: e.target.value })}
+              placeholder="https://chat.whatsapp.com/..."
+            />
+            <p className="text-xs text-gray-400">{t('whatsappChatLinkHint')}</p>
+          </div>
+          <div className="space-y-1">
             <Label>{t('whatsappPhone')}</Label>
             <Input
               value={settings.whatsappPhone ?? ''}

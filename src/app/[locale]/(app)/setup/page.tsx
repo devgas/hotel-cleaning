@@ -1,11 +1,11 @@
 'use client'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
 import { Header } from '@/components/common/Header'
 import { RoomSelector } from '@/components/setup/RoomSelector'
 import { useGetRoomsQuery } from '@/store/api/roomsApi'
-import { useCreateDailyPlanMutation } from '@/store/api/dailyPlanApi'
+import { useCreateDailyPlanMutation, useGetTodayPlanQuery } from '@/store/api/dailyPlanApi'
 import type { RoomType } from '@/types'
 
 interface SelectedRoom {
@@ -19,11 +19,28 @@ export default function SetupPage() {
   const { locale } = useParams<{ locale: string }>()
   const router = useRouter()
   const { data: rooms = [] } = useGetRoomsQuery()
+  const { data: todayPlan } = useGetTodayPlanQuery()
   const [createPlan, { isLoading }] = useCreateDailyPlanMutation()
-  const [selected, setSelected] = useState<SelectedRoom[]>([])
+  const [selectedOverride, setSelectedOverride] = useState<SelectedRoom[] | null>(null)
+
+  const initialSelected = useMemo(
+    () =>
+      todayPlan?.rooms.map((room) => ({
+        roomId: room.roomId,
+        roomType: room.roomType,
+        priority: room.priority,
+      })) ?? [],
+    [todayPlan]
+  )
+
+  const selected = selectedOverride ?? initialSelected
+
+  function updateSelected(updater: (current: SelectedRoom[]) => SelectedRoom[]) {
+    setSelectedOverride((current) => updater(current ?? initialSelected))
+  }
 
   function toggle(roomId: number) {
-    setSelected((prev) =>
+    updateSelected((prev) =>
       prev.some((r) => r.roomId === roomId)
         ? prev.filter((r) => r.roomId !== roomId)
         : [...prev, { roomId, roomType: 'stayover', priority: false }]
@@ -31,7 +48,7 @@ export default function SetupPage() {
   }
 
   function changeType(roomId: number, roomType: RoomType) {
-    setSelected((prev) =>
+    updateSelected((prev) =>
       prev.map((r) =>
         r.roomId === roomId
           ? { ...r, roomType, priority: roomType === 'stayover' ? false : r.priority }
@@ -41,11 +58,13 @@ export default function SetupPage() {
   }
 
   function changePriority(roomId: number, priority: boolean) {
-    setSelected((prev) => prev.map((r) => (r.roomId === roomId ? { ...r, priority } : r)))
+    updateSelected((prev) => prev.map((r) => (r.roomId === roomId ? { ...r, priority } : r)))
   }
 
   async function handleSave() {
     if (!selected.length) return
+    const confirmed = window.confirm(t('confirmOverride'))
+    if (!confirmed) return
     await createPlan({ rooms: selected })
     router.push(`/${locale}/board`)
   }
