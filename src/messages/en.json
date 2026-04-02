@@ -10,10 +10,15 @@
     "name": "Name",
     "password": "Password",
     "adminPassword": "Admin Password",
+    "newPassword": "New Password",
     "logout": "Sign Out",
     "loginTitle": "Sign In",
     "registerTitle": "Register",
-    "registerSuccess": "Registration successful! Redirecting..."
+    "registerSuccess": "Registration successful! Redirecting...",
+    "resetPassword": "Reset Password",
+    "resetPasswordTitle": "Reset Password",
+    "resetPasswordSuccess": "Password reset successful! Redirecting...",
+    "backToLogin": "Back to login"
   },
   "setup": {
     "title": "Today's Setup",

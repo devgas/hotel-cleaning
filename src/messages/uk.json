@@ -10,10 +10,15 @@
     "name": "Ім'я",
     "password": "Пароль",
     "adminPassword": "Пароль адміна",
+    "newPassword": "Новий пароль",
     "logout": "Вийти",
     "loginTitle": "Вхід",
     "registerTitle": "Реєстрація",
-    "registerSuccess": "Реєстрація успішна! Перенаправлення..."
+    "registerSuccess": "Реєстрація успішна! Перенаправлення...",
+    "resetPassword": "Скинути пароль",
+    "resetPasswordTitle": "Скинути пароль",
+    "resetPasswordSuccess": "Пароль успішно скинуто! Перенаправлення...",
+    "backToLogin": "Назад до входу"
   },
   "setup": {
     "title": "Налаштування на сьогодні",

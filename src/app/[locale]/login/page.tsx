@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,7 +12,6 @@ import Link from 'next/link'
 export default function LoginPage() {
   const t = useTranslations('auth')
   const { locale } = useParams<{ locale: string }>()
-  const router = useRouter()
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -22,12 +21,22 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    const res = await signIn('credentials', { name, password, redirect: false })
+
+    const res = await signIn('credentials', {
+      name,
+      password,
+      redirect: false,
+      callbackUrl: `/${locale}/board`,
+    })
+
     if (res?.error) {
-      setError(res.error)
+      setError('Invalid name or password')
+    } else if (res?.url) {
+      window.location.href = res.url
     } else {
-      router.push(`/${locale}/board`)
+      setError('Login failed')
     }
+
     setLoading(false)
   }
 
@@ -51,6 +60,11 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? '...' : t('login')}
             </Button>
+            <p className="text-center text-sm text-gray-500">
+              <Link href={`/${locale}/reset-password`} className="text-blue-600 underline">
+                {t('resetPassword')}
+              </Link>
+            </p>
             <p className="text-center text-sm text-gray-500">
               <Link href={`/${locale}/register`} className="text-blue-600 underline">
                 {t('register')}
