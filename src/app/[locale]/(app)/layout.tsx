@@ -1,5 +1,4 @@
 import { BottomNav } from '@/components/common/BottomNav'
-import { InstallPrompt } from '@/components/common/InstallPrompt'
 import { auth } from '@/lib/auth/authOptions'
 import { redirect } from 'next/navigation'
 
@@ -18,7 +17,6 @@ export default async function AppLayout({
     <div className="min-h-screen bg-gray-50">
       <main className="pb-20">{children}</main>
       <BottomNav locale={locale} />
-      <InstallPrompt />
     </div>
   )
 }
