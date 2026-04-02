@@ -199,6 +199,11 @@ export default function SetupPage() {
     )
     if (!confirmed) return
     await createPlan({ date: activeDateStr, rooms: selected })
+    setSelectedOverrides((current) => {
+      const next = { ...current }
+      delete next[activeTab]
+      return next
+    })
     if (activeTab === 'today') {
       router.push(`/${locale}/board`)
     } else {
