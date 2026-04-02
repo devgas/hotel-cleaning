@@ -14,13 +14,13 @@ export function BoardTabs() {
   const t = useTranslations('board')
 
   return (
-    <div className="flex overflow-x-auto bg-white border-b">
+    <div className="flex bg-white border-b">
       {tabs.map((tab) => (
         <button
           key={tab}
           onClick={() => dispatch(setBoardTab(tab))}
           className={cn(
-            'flex-shrink-0 px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+            'flex-1 px-4 py-2 text-sm font-medium border-b-2 transition-colors',
             active === tab
               ? 'border-blue-600 text-blue-600'
               : 'border-transparent text-gray-500'
