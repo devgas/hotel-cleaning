@@ -6,6 +6,7 @@ const planRoomSchema = z.object({
   roomType: z.enum(['checkout', 'stayover']),
   priority: z.boolean(),
   priorityTime: z.string().nullable().optional(),
+  guestCount: z.number().int().min(1).max(5).optional().default(1),
 }).superRefine((value, ctx) => {
   if (!value.priority) return
 

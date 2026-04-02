@@ -61,6 +61,7 @@ export async function POST(req: NextRequest) {
               roomType: room.roomType,
               priority: room.priority,
               priorityTime: room.priority ? room.priorityTime ?? '09:00' : null,
+              guestCount: room.guestCount ?? 1,
               updatedByUserId: userId,
             },
           })
@@ -73,6 +74,7 @@ export async function POST(req: NextRequest) {
             roomId: room.roomId,
             roomType: room.roomType,
             priority: room.priority,
+            guestCount: room.guestCount ?? 1,
             status: 'not_cleaned_yet',
             updatedByUserId: userId,
           },
@@ -99,6 +101,7 @@ export async function POST(req: NextRequest) {
             roomType: r.roomType,
             priority: r.priority,
             priorityTime: r.priority ? r.priorityTime ?? '09:00' : null,
+            guestCount: r.guestCount ?? 1,
             status: 'not_cleaned_yet' as const,
             updatedByUserId: userId,
           })),
