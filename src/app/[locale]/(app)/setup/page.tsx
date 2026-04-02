@@ -209,8 +209,8 @@ export default function SetupPage() {
   return (
     <div>
       <Header title={t('title')} />
-      <div className={cn('p-4 space-y-4', selected.length > 0 && 'pb-32')}>
-        <div className="sticky top-[57px] z-30 bg-white pb-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
+      <div className={cn('px-4 space-y-4', selected.length > 0 && 'pb-36')}>
+        <div className="sticky top-[57px] z-30 bg-white pt-4 pb-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
           <div className="grid h-auto w-full grid-cols-2 rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
             <button
               type="button"
@@ -270,7 +270,7 @@ export default function SetupPage() {
         )}
       </div>
       {selected.length > 0 && (
-        <div className="fixed inset-x-0 bottom-20 z-40 px-4 pt-3 bg-white shadow-[0_-4px_12px_0_rgba(0,0,0,0.06)]">
+        <div className="fixed inset-x-0 bottom-0 z-40 px-4 pt-3 pb-20 bg-white shadow-[0_-4px_12px_0_rgba(0,0,0,0.06)]">
           <button
             onClick={handleSave}
             disabled={isLoading || !selectedOverrides[activeTab]}
