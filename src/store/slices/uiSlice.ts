@@ -9,7 +9,7 @@ interface UIState {
 }
 
 const initialState: UIState = {
-  boardTab: 'all',
+  boardTab: 'priority',
   isOnline: true,
   locale: 'uk',
 }

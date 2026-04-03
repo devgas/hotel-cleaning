@@ -71,7 +71,6 @@ export default function BoardPage() {
   }
 
   const filtered: RoomWithStatus[] = rooms.filter((r) => {
-    if (activeTab === 'all') return true
     if (activeTab === 'priority') return r.priority
     if (activeTab === 'checkout') return r.roomType === 'checkout'
     if (activeTab === 'stayover') return r.roomType === 'stayover'

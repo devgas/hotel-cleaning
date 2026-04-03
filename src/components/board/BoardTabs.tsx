@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 
 type Tab = 'all' | 'priority' | 'checkout' | 'stayover'
-const tabs: Tab[] = ['all', 'priority', 'checkout', 'stayover']
+const tabs: Tab[] = ['priority', 'checkout', 'stayover']
 
 interface TabCounts {
   total: number
