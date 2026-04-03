@@ -55,6 +55,13 @@ export default function BoardPage() {
   const notNeeded = rooms.filter((r) => r.status === 'not_needed').length
   const notCleaned = rooms.filter((r) => r.status === 'not_cleaned_yet').length
 
+  const tabCounts = {
+    all: rooms.length,
+    priority: rooms.filter((r) => r.priority).length,
+    checkout: rooms.filter((r) => r.roomType === 'checkout').length,
+    stayover: rooms.filter((r) => r.roomType === 'stayover').length,
+  }
+
   const filtered: RoomWithStatus[] = rooms.filter((r) => {
     if (activeTab === 'all') return true
     if (activeTab === 'priority') return r.priority
@@ -68,7 +75,7 @@ export default function BoardPage() {
       <Header title={t('title')} />
       <div className="sticky top-[52px] z-30 bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
         <SummaryCounters total={rooms.length} cleaned={cleaned} notNeeded={notNeeded} notCleaned={notCleaned} />
-        <BoardTabs />
+        <BoardTabs counts={tabCounts} />
       </div>
       <div className="p-4 space-y-3">
         {filtered.map((room) => (

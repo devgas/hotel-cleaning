@@ -8,7 +8,11 @@ import { cn } from '@/lib/utils'
 type Tab = 'all' | 'priority' | 'checkout' | 'stayover'
 const tabs: Tab[] = ['all', 'priority', 'checkout', 'stayover']
 
-export function BoardTabs() {
+interface Props {
+  counts?: Record<Tab, number>
+}
+
+export function BoardTabs({ counts }: Props) {
   const dispatch = useDispatch()
   const active = useSelector((s: RootState) => s.ui.boardTab)
   const t = useTranslations('board')
@@ -20,13 +24,16 @@ export function BoardTabs() {
           key={tab}
           onClick={() => dispatch(setBoardTab(tab))}
           className={cn(
-            'flex-1 px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+            'flex-1 px-2 py-2 text-sm font-medium border-b-2 transition-colors',
             active === tab
               ? 'border-blue-600 text-blue-600'
               : 'border-transparent text-gray-500'
           )}
         >
           {t(tab)}
+          {counts != null && (
+            <span className="ml-1 text-xs opacity-60">({counts[tab]})</span>
+          )}
         </button>
       ))}
     </div>
