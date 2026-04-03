@@ -13,9 +13,10 @@ model Hotel {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   users       User[]
-  rooms       Room[]
-  dailyPlans  DailyPlan[]
-  settings    AppSetting[]
+  rooms              Room[]
+  dailyPlans         DailyPlan[]
+  settings           AppSetting[]
+  pushSubscriptions  PushSubscription[]
 }
 
 model User {
@@ -89,6 +90,19 @@ model StatusHistory {
   sendMessageUsed Boolean        @default(false)
   dailyPlanRoom   DailyPlanRoom  @relation(fields: [dailyPlanRoomId], references: [id])
   changedBy       User           @relation(fields: [changedByUserId], references: [id])
+}
+
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  hotelId   Int
+  userId    Int
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+  hotel     Hotel    @relation(fields: [hotelId], references: [id])
+
+  @@index([hotelId])
 }
 
 model AppSetting {
