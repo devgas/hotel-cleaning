@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   const parsed = schema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: 'Invalid' }, { status: 400 })
 
-  const hotelId = parseInt(session.user!.hotelId!)
+  const hotelId = parseInt((session.user as { hotelId?: string }).hotelId!)
   const userId = parseInt(session.user!.id!)
 
   await prisma.pushSubscription.upsert({
