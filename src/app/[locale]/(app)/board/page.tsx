@@ -1,4 +1,5 @@
 'use client'
+import { useSyncExternalStore } from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
@@ -6,7 +7,7 @@ import { Header } from '@/components/common/Header'
 import { SummaryCounters } from '@/components/board/SummaryCounters'
 import { BoardTabs } from '@/components/board/BoardTabs'
 import { RoomCard } from '@/components/board/RoomCard'
-import { useGetTodayPlanQuery } from '@/store/api/dailyPlanApi'
+import { useGetPlanByDateQuery } from '@/store/api/dailyPlanApi'
 import { useGetSettingsQuery } from '@/store/api/settingsApi'
 import type { RootState } from '@/store'
 import type { RoomWithStatus } from '@/types'
@@ -14,13 +15,31 @@ import Link from 'next/link'
 
 const POLL_INTERVAL = 15000
 
+function getTodayDate() {
+  const d = new Date()
+  const y = d.getFullYear()
+  const m = `${d.getMonth() + 1}`.padStart(2, '0')
+  const day = `${d.getDate()}`.padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
+let cachedDate = ''
+function getClientDate() {
+  const next = getTodayDate()
+  if (next !== cachedDate) cachedDate = next
+  return cachedDate
+}
+
 export default function BoardPage() {
   const t = useTranslations('board')
   const { locale } = useParams<{ locale: string }>()
   const activeTab = useSelector((s: RootState) => s.ui.boardTab)
   const isOnline = useSelector((s: RootState) => s.ui.isOnline)
 
-  const { data: plan, isLoading } = useGetTodayPlanQuery(undefined, {
+  const todayDate = useSyncExternalStore(() => () => undefined, getClientDate, () => '')
+
+  const { data: plan, isLoading } = useGetPlanByDateQuery(todayDate, {
+    skip: !todayDate,
     pollingInterval: POLL_INTERVAL,
   })
   const { data: settings } = useGetSettingsQuery()
