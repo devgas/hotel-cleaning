@@ -295,7 +295,14 @@ export default function SetupPage() {
               activeTab === 'today' ? 'bg-blue-600' : 'bg-emerald-600'
             )}
           >
-            {isLoading ? '...' : savedTab === activeTab ? `${t('saved')} ${activePlanLabel}` : `${t('save')} ${activePlanLabel} (${selected.length})`}
+            {isLoading ? '...' : savedTab === activeTab ? `${t('saved')} ${activePlanLabel}` : (
+              <span className="flex flex-col items-center gap-0.5">
+                <span>{t('save')} {activePlanLabel} ({selected.length})</span>
+                <span className="text-xs font-normal opacity-80">
+                  {t('checkout')} {selected.filter(r => r.roomType === 'checkout').length} · {t('stayover')} {selected.filter(r => r.roomType === 'stayover').length}
+                </span>
+              </span>
+            )}
           </button>
         </div>
       )}
