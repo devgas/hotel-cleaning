@@ -159,7 +159,7 @@ export function RoomCard({
     <>
       <div
         className={cn(
-          'bg-white rounded-xl shadow-sm border p-4 flex items-center gap-3',
+          'bg-white rounded-xl shadow-sm border px-3 py-2.5 flex items-center gap-3',
           room.priority && 'border-l-4 border-l-orange-400'
         )}
       >

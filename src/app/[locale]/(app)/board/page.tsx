@@ -102,7 +102,7 @@ export default function BoardPage() {
         <SummaryCounters total={rooms.length} cleaned={cleaned} notNeeded={notNeeded} notCleaned={notCleaned} />
         <BoardTabs counts={tabCounts} />
       </div>
-      <div className="p-4 space-y-3">
+      <div className="px-3 pt-2 pb-4 space-y-1.5">
         {filtered.map((room) => (
           <RoomCard
             key={room.dailyPlanRoomId}
