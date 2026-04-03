@@ -221,27 +221,23 @@ export default function SetupPage() {
             type="button"
             onClick={() => { setActiveTab('today'); setSearch('') }}
             className={cn(
-              'h-auto rounded-lg px-3 py-2 text-left',
+              'h-auto rounded-lg px-3 py-2 text-center',
               activeTab === 'today' ? 'bg-blue-600 text-white' : 'text-slate-600'
             )}
           >
-            <div className="text-left">
-              <div className="text-xs font-semibold uppercase tracking-wide">{t('today')}</div>
-              <div className="text-[11px] opacity-80">{formatTabDate(planDates.today)}</div>
-            </div>
+            <div className="text-xs font-semibold uppercase tracking-wide">{t('today')}</div>
+            <div className="text-[11px] opacity-80">{formatTabDate(planDates.today)}</div>
           </button>
           <button
             type="button"
             onClick={() => { setActiveTab('tomorrow'); setSearch('') }}
             className={cn(
-              'h-auto rounded-lg px-3 py-2 text-left',
+              'h-auto rounded-lg px-3 py-2 text-center',
               activeTab === 'tomorrow' ? 'bg-emerald-600 text-white' : 'text-slate-600'
             )}
           >
-            <div className="text-left">
-              <div className="text-xs font-semibold uppercase tracking-wide">{t('tomorrow')}</div>
-              <div className="text-[11px] opacity-80">{formatTabDate(planDates.tomorrow)}</div>
-            </div>
+            <div className="text-xs font-semibold uppercase tracking-wide">{t('tomorrow')}</div>
+            <div className="text-[11px] opacity-80">{formatTabDate(planDates.tomorrow)}</div>
           </button>
         </div>
         <input
