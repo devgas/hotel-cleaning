@@ -177,7 +177,7 @@ export function RoomCard({
                 ★ {room.priorityTime ?? defaultPriorityTime}
               </span>
             )}
-            {room.guestCount > 1 && (
+            {room.guestCount >= 1 && (
               <span className="text-xs bg-green-50 text-green-700 px-1.5 py-0.5 rounded">
                 👤 {room.guestCount}
               </span>
