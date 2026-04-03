@@ -55,11 +55,19 @@ export default function BoardPage() {
   const notNeeded = rooms.filter((r) => r.status === 'not_needed').length
   const notCleaned = rooms.filter((r) => r.status === 'not_cleaned_yet').length
 
+  function tabStats(subset: typeof rooms) {
+    return {
+      total: subset.length,
+      cleaned: subset.filter((r) => r.status === 'cleaned').length,
+      notCleaned: subset.filter((r) => r.status === 'not_cleaned_yet').length,
+    }
+  }
+
   const tabCounts = {
-    all: rooms.length,
-    priority: rooms.filter((r) => r.priority).length,
-    checkout: rooms.filter((r) => r.roomType === 'checkout').length,
-    stayover: rooms.filter((r) => r.roomType === 'stayover').length,
+    all: tabStats(rooms),
+    priority: tabStats(rooms.filter((r) => r.priority)),
+    checkout: tabStats(rooms.filter((r) => r.roomType === 'checkout')),
+    stayover: tabStats(rooms.filter((r) => r.roomType === 'stayover')),
   }
 
   const filtered: RoomWithStatus[] = rooms.filter((r) => {
