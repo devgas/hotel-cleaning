@@ -1,24 +1,24 @@
-declare const self: ServiceWorkerGlobalScope
+export {}
 
-self.addEventListener('push', (event) => {
+self.addEventListener('push', (event: PushEvent) => {
   if (!event.data) return
   const data = event.data.json() as { title: string; body: string }
   event.waitUntil(
-    self.registration.showNotification(data.title, {
+    (self as unknown as ServiceWorkerGlobalScope).registration.showNotification(data.title, {
       body: data.body,
       icon: '/icons/icon-192x192.png',
     })
   )
 })
 
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', (event: NotificationEvent) => {
   event.notification.close()
   event.waitUntil(
-    self.clients.matchAll({ type: 'window' }).then((clientList) => {
+    (self as unknown as ServiceWorkerGlobalScope).clients.matchAll({ type: 'window' }).then((clientList) => {
       for (const client of clientList) {
         if ('focus' in client) return client.focus()
       }
-      return self.clients.openWindow('/')
+      return (self as unknown as ServiceWorkerGlobalScope).clients.openWindow('/')
     })
   )
 })
