@@ -19,7 +19,7 @@ export async function GET() {
           room: { select: { roomNumber: true } },
           updatedBy: { select: { name: true } },
         },
-        orderBy: [{ priority: 'desc' }, { priorityTime: 'asc' }, { room: { roomNumber: 'asc' } }],
+        orderBy: [{ room: { roomNumber: 'asc' } }],
       },
     },
   })

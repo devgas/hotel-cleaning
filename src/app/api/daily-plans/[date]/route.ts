@@ -20,7 +20,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
           room: { select: { roomNumber: true } },
           updatedBy: { select: { name: true } },
         },
-        orderBy: [{ priority: 'desc' }, { priorityTime: 'asc' }, { room: { roomNumber: 'asc' } }],
+        orderBy: [{ room: { roomNumber: 'asc' } }],
       },
     },
   })
