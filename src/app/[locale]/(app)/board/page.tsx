@@ -15,6 +15,12 @@ import Link from 'next/link'
 
 const POLL_INTERVAL = 15000
 
+// Easter decoration — remove after 2026-04-14
+const EASTER_END = new Date('2026-04-14T23:59:59')
+function isEaster() {
+  return new Date() <= EASTER_END
+}
+
 function getTodayDate() {
   const d = new Date()
   const y = d.getFullYear()
@@ -95,10 +101,17 @@ export default function BoardPage() {
     return true
   })
 
+  const showEaster = isEaster()
+
   return (
     <div>
-      <Header title={t('title')} />
+      <Header title={showEaster ? `🐣 ${t('title')} 🥚` : t('title')} />
       <div className="sticky top-[52px] z-30 bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
+        {showEaster && (
+          <div className="text-center text-sm py-1 bg-gradient-to-r from-yellow-50 via-pink-50 to-purple-50">
+            🕯️ {t('happyEaster')} 🌷🥚🐣🌸
+          </div>
+        )}
         <SummaryCounters total={rooms.length} cleaned={cleaned} notNeeded={notNeeded} notCleaned={notCleaned} />
         <BoardTabs counts={tabCounts} />
       </div>
