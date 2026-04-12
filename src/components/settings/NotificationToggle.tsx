@@ -19,18 +19,28 @@ export function NotificationToggle() {
   const [busy, setBusy] = useState(false)
 
   useEffect(() => {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !VAPID_PUBLIC_KEY) {
-      setState('unsupported')
-      return
+    async function check() {
+      if (!('Notification' in window)) {
+        setState('unsupported')
+        return
+      }
+      if (Notification.permission === 'denied') {
+        setState('denied')
+        return
+      }
+      if (!('serviceWorker' in navigator) || !('PushManager' in window) || !VAPID_PUBLIC_KEY) {
+        setState('unsupported')
+        return
+      }
+      try {
+        const reg = await navigator.serviceWorker.ready
+        const sub = await reg.pushManager.getSubscription()
+        setState(sub ? 'enabled' : 'disabled')
+      } catch {
+        setState('disabled')
+      }
     }
-    if (Notification.permission === 'denied') {
-      setState('denied')
-      return
-    }
-    navigator.serviceWorker.ready.then(async (reg) => {
-      const sub = await reg.pushManager.getSubscription()
-      setState(sub ? 'enabled' : 'disabled')
-    })
+    check()
   }, [])
 
   async function enable() {
@@ -87,7 +97,9 @@ export function NotificationToggle() {
   return (
     <div className="space-y-2">
       <h3 className="font-semibold text-gray-700">{t('notifications')}</h3>
-      {state === 'unsupported' || state === 'denied' ? (
+      {state === 'unsupported' ? (
+        <p className="text-sm text-gray-400">{t('notificationsUnsupported')}</p>
+      ) : state === 'denied' ? (
         <div className="rounded-lg border border-gray-200 p-3 space-y-1">
           <p className="text-sm text-gray-500">{t('notificationsDenied')}</p>
           <p className="text-xs text-gray-400">{t('notificationsDeniedHint')}</p>
