@@ -17,9 +17,12 @@ export function NotificationToggle() {
   const t = useTranslations('settings')
   const [state, setState] = useState<State>('loading')
   const [busy, setBusy] = useState(false)
+  const [debug, setDebug] = useState('')
 
   useEffect(() => {
     async function check() {
+      const info = `N:${'Notification' in window} SW:${'serviceWorker' in navigator} PM:${'PushManager' in window} V:${!!VAPID_PUBLIC_KEY} P:${typeof Notification !== 'undefined' ? Notification.permission : '?'}`
+      setDebug(info)
       if (!('Notification' in window)) {
         setState('unsupported')
         return
@@ -97,6 +100,7 @@ export function NotificationToggle() {
   return (
     <div className="space-y-2">
       <h3 className="font-semibold text-gray-700">{t('notifications')}</h3>
+      {debug && <p className="text-xs text-gray-300 font-mono">{debug}</p>}
       {state === 'unsupported' ? (
         <p className="text-sm text-gray-400">{t('notificationsUnsupported')}</p>
       ) : state === 'denied' ? (
