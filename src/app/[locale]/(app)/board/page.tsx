@@ -105,7 +105,7 @@ export default function BoardPage() {
 
   return (
     <div>
-      <Header title={showEaster ? `🐣 ${t('title')} 🥚` : t('title')} />
+      <Header title={t('title')} />
       <div className="sticky top-[52px] z-30 bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
         {showEaster && (
           <div className="text-center text-sm py-1 bg-gradient-to-r from-yellow-50 via-pink-50 to-purple-50">
