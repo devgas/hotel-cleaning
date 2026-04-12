@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { Header } from '@/components/common/Header'
 import { RoomManager } from '@/components/settings/RoomManager'
 import { WhatsAppSettings } from '@/components/settings/WhatsAppSettings'
+import { NotificationToggle } from '@/components/settings/NotificationToggle'
 import { useGetSettingsQuery, useUpdateSettingsMutation } from '@/store/api/settingsApi'
 import { Button } from '@/components/ui/button'
 import type { AppSettings } from '@/types'
@@ -64,6 +65,7 @@ export default function SettingsPage() {
       <div className="p-4 space-y-6">
         <RoomManager />
         <WhatsAppSettings settings={localSettings} onChange={merge} />
+        <NotificationToggle />
         <div className="space-y-2">
           <h3 className="font-semibold text-gray-700">{t('language')}</h3>
           <div className="flex gap-2">

@@ -89,7 +89,11 @@
     "clearPlan": "Очистити план на сьогодні",
     "clearPlanConfirm": "Введіть свій пароль для очищення плану:",
     "clearPlanSuccess": "План очищено",
-    "clearPlanError": "Невірний пароль"
+    "clearPlanError": "Невірний пароль",
+    "notifications": "Сповіщення",
+    "notificationsOn": "Сповіщення увімкнено ✓",
+    "notificationsOff": "Увімкнути сповіщення",
+    "notificationsDenied": "Сповіщення заблоковано в налаштуваннях браузера"
   },
   "common": {
     "loading": "Завантаження...",

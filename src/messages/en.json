@@ -89,7 +89,11 @@
     "clearPlan": "Clear Today's Plan",
     "clearPlanConfirm": "Enter your password to clear today's plan:",
     "clearPlanSuccess": "Plan cleared",
-    "clearPlanError": "Invalid password"
+    "clearPlanError": "Invalid password",
+    "notifications": "Notifications",
+    "notificationsOn": "Notifications enabled ✓",
+    "notificationsOff": "Enable notifications",
+    "notificationsDenied": "Notifications blocked in browser settings"
   },
   "common": {
     "loading": "Loading...",
