@@ -93,7 +93,8 @@
     "notifications": "Notifications",
     "notificationsOn": "Notifications enabled ✓",
     "notificationsOff": "Enable notifications",
-    "notificationsDenied": "Notifications blocked in browser settings"
+    "notificationsDenied": "Notifications blocked in browser settings",
+    "notificationsDeniedHint": "Tap the lock icon (🔒) in the address bar → Site settings → Allow notifications"
   },
   "common": {
     "loading": "Loading...",

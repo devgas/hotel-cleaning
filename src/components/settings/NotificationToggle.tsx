@@ -82,13 +82,16 @@ export function NotificationToggle() {
     }
   }
 
-  if (state === 'loading' || state === 'unsupported') return null
+  if (state === 'loading') return null
 
   return (
     <div className="space-y-2">
       <h3 className="font-semibold text-gray-700">{t('notifications')}</h3>
-      {state === 'denied' ? (
-        <p className="text-sm text-gray-400">{t('notificationsDenied')}</p>
+      {state === 'unsupported' || state === 'denied' ? (
+        <div className="rounded-lg border border-gray-200 p-3 space-y-1">
+          <p className="text-sm text-gray-500">{t('notificationsDenied')}</p>
+          <p className="text-xs text-gray-400">{t('notificationsDeniedHint')}</p>
+        </div>
       ) : (
         <button
           onClick={state === 'enabled' ? disable : enable}
