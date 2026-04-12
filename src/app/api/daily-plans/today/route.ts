@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth/authOptions'
 import { prisma } from '@/lib/db/prisma'
+import { sortByRoomNumber } from '@/lib/sortRooms'
 import bcrypt from 'bcryptjs'
 
 export async function GET() {
@@ -19,17 +20,18 @@ export async function GET() {
           room: { select: { roomNumber: true } },
           updatedBy: { select: { name: true } },
         },
-        orderBy: [{ room: { roomNumber: 'asc' } }],
       },
     },
   })
 
   if (!plan) return NextResponse.json(null)
 
+  const sorted = sortByRoomNumber(plan.rooms, (r) => r.room.roomNumber)
+
   return NextResponse.json({
     id: plan.id,
     date: plan.date.toISOString(),
-    rooms: plan.rooms.map((r) => ({
+    rooms: sorted.map((r) => ({
       dailyPlanRoomId: r.id,
       roomId: r.roomId,
       roomNumber: r.room.roomNumber,
