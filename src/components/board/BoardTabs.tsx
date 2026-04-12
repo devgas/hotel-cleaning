@@ -39,7 +39,7 @@ export function BoardTabs({ counts }: Props) {
           {t(tab)}
           {counts != null && (
             <span className="ml-1 text-xs">
-              (<span className="text-green-600 font-semibold">{counts[tab].cleaned}</span>
+              - <span className="text-blue-600 font-semibold">{counts[tab].total}</span> (<span className="text-green-600 font-semibold">{counts[tab].cleaned}</span>
               <span className="text-gray-400">/</span>
               <span className="text-red-500 font-semibold">{counts[tab].notCleaned}</span>)
             </span>
