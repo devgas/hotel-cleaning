@@ -41,7 +41,11 @@ export default function HistoryDetailPage() {
         {rooms.map((room) => (
           <div key={room.dailyPlanRoomId} className="bg-white rounded-xl border p-3 flex items-center justify-between">
             <span className="font-medium">{room.roomNumber}</span>
-            <StatusBadge status={room.status} label={room.status.replace(/_/g, ' ')} />
+            <StatusBadge status={room.status} label={
+              room.status === 'cleaned' ? t('cleaned') :
+              room.status === 'not_needed' ? t('notNeeded') :
+              t('notCleaned')
+            } />
           </div>
         ))}
       </div>
