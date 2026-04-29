@@ -3,9 +3,10 @@ import { auth } from '@/lib/auth/authOptions'
 import { prisma } from '@/lib/db/prisma'
 import { z } from 'zod'
 import { defaultPriorityTime, isValidPriorityTime } from '@/lib/dailyPlans/priorityTime'
+import { isStayoverRoomType, roomTypeOptions, toDbRoomType } from '@/lib/roomTypes'
 
 const typeSchema = z.object({
-  roomType: z.enum(['checkout', 'stayover']),
+  roomType: z.enum(roomTypeOptions),
   priority: z.boolean().optional(),
   priorityTime: z.string().nullable().optional(),
   guestCount: z.number().int().min(1).max(5).optional(),
@@ -38,15 +39,18 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const current = await prisma.dailyPlanRoom.findUnique({ where: { id: planRoomId } })
   if (!current) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
+  const nextRoomType = toDbRoomType(parsed.data.roomType)
+  const nextPriority = nextRoomType === 'checkout' ? parsed.data.priority ?? current.priority : false
+
   const updated = await prisma.dailyPlanRoom.update({
     where: { id: planRoomId },
     data: {
-      roomType: parsed.data.roomType,
-      priority: parsed.data.priority ?? current.priority,
+      roomType: nextRoomType,
+      priority: nextPriority,
       priorityTime:
-        parsed.data.roomType === 'stayover'
+        isStayoverRoomType(parsed.data.roomType)
           ? null
-          : parsed.data.priority ?? current.priority
+          : nextPriority
             ? (parsed.data.priorityTime ?? current.priorityTime ?? defaultPriorityTime)
             : null,
       guestCount: parsed.data.guestCount ?? current.guestCount,
@@ -56,7 +60,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
           oldStatus: current.status,
           newStatus: current.status,
           oldRoomType: current.roomType,
-          newRoomType: parsed.data.roomType,
+          newRoomType: nextRoomType,
           changedByUserId: userId,
         },
       },
@@ -64,7 +68,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   })
 
   return NextResponse.json({
-    roomType: updated.roomType,
+    roomType: parsed.data.roomType,
     priority: updated.priority,
     priorityTime: updated.priorityTime,
     guestCount: updated.guestCount,

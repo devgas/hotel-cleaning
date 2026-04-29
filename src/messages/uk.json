@@ -34,6 +34,7 @@
     "confirmOverride": "Збереження перезапише поточний план на {date}. Продовжити?",
     "checkout": "Наїзд",
     "stayover": "Уклід",
+    "big-stayover": "Великий уклід",
     "priority": "Пріоритет",
     "priorityTime": "Час пріоритету",
     "noRooms": "Кімнати не вибрані"
@@ -44,6 +45,7 @@
     "priority": "Пріоритетні",
     "checkout": "Наїзд",
     "stayover": "Уклід",
+    "big-stayover": "Великий уклід",
     "editPlan": "Редагувати план",
     "editRoom": "Редагувати кімнату",
     "roomType": "Тип кімнати",

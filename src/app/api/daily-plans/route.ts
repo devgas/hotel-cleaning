@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth/authOptions'
 import { prisma } from '@/lib/db/prisma'
 import { parsePlanDate } from '@/lib/dailyPlans/planDate'
 import { validateDailyPlanInput } from '@/lib/dailyPlans/validateDailyPlan'
+import { toDbRoomType } from '@/lib/roomTypes'
 
 export async function POST(req: NextRequest) {
   const session = await auth()
@@ -58,9 +59,10 @@ export async function POST(req: NextRequest) {
           await tx.dailyPlanRoom.update({
             where: { id: existingPlanRoomId },
             data: {
-              roomType: room.roomType,
-              priority: room.priority,
-              priorityTime: room.priority ? room.priorityTime ?? '09:00' : null,
+              roomType: toDbRoomType(room.roomType),
+              priority: room.roomType === 'checkout' ? room.priority : false,
+              priorityTime:
+                room.roomType === 'checkout' && room.priority ? room.priorityTime ?? '09:00' : null,
               guestCount: room.guestCount ?? 1,
               updatedByUserId: userId,
             },
@@ -72,9 +74,11 @@ export async function POST(req: NextRequest) {
           data: {
             dailyPlanId: existing.id,
             roomId: room.roomId,
-            roomType: room.roomType,
-            priority: room.priority,
+            roomType: toDbRoomType(room.roomType),
+            priority: room.roomType === 'checkout' ? room.priority : false,
             guestCount: room.guestCount ?? 1,
+            priorityTime:
+              room.roomType === 'checkout' && room.priority ? room.priorityTime ?? '09:00' : null,
             status: 'not_cleaned_yet',
             updatedByUserId: userId,
           },
@@ -98,13 +102,13 @@ export async function POST(req: NextRequest) {
       rooms: {
         create: parsed.data.rooms.map((r) => ({
           roomId: r.roomId,
-            roomType: r.roomType,
-            priority: r.priority,
-            priorityTime: r.priority ? r.priorityTime ?? '09:00' : null,
-            guestCount: r.guestCount ?? 1,
-            status: 'not_cleaned_yet' as const,
-            updatedByUserId: userId,
-          })),
+          roomType: toDbRoomType(r.roomType),
+          priority: r.roomType === 'checkout' ? r.priority : false,
+          priorityTime: r.roomType === 'checkout' && r.priority ? r.priorityTime ?? '09:00' : null,
+          guestCount: r.guestCount ?? 1,
+          status: 'not_cleaned_yet' as const,
+          updatedByUserId: userId,
+        })),
       },
     },
   })

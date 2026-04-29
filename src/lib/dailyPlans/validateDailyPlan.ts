@@ -1,9 +1,10 @@
 import { z } from 'zod'
 import { isValidPriorityTime } from '@/lib/dailyPlans/priorityTime'
+import { roomTypeOptions } from '@/lib/roomTypes'
 
 const planRoomSchema = z.object({
   roomId: z.number().int().positive(),
-  roomType: z.enum(['checkout', 'stayover']),
+  roomType: z.enum(roomTypeOptions),
   priority: z.boolean(),
   priorityTime: z.string().nullable().optional(),
   guestCount: z.number().int().min(1).max(5).optional().default(1),

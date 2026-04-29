@@ -9,6 +9,7 @@ import { BoardTabs } from '@/components/board/BoardTabs'
 import { RoomCard } from '@/components/board/RoomCard'
 import { useGetPlanByDateQuery } from '@/store/api/dailyPlanApi'
 import { useGetSettingsQuery } from '@/store/api/settingsApi'
+import { isStayoverRoomType } from '@/lib/roomTypes'
 import type { RootState } from '@/store'
 import type { RoomWithStatus } from '@/types'
 import Link from 'next/link'
@@ -92,12 +93,12 @@ export default function BoardPage() {
     all: tabStats(rooms),
     priority: tabStats(rooms.filter((r) => r.priority)),
     checkout: tabStats(rooms.filter((r) => r.roomType === 'checkout')),
-    stayover: tabStats(rooms.filter((r) => r.roomType === 'stayover')),
+    stayover: tabStats(rooms.filter((r) => isStayoverRoomType(r.roomType))),
   }
 
   const filtered: RoomWithStatus[] = rooms.filter((r) => {
     if (activeTab === 'checkout') return r.roomType === 'checkout'
-    if (activeTab === 'stayover') return r.roomType === 'stayover'
+    if (activeTab === 'stayover') return isStayoverRoomType(r.roomType)
     return true
   })
 

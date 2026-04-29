@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth/authOptions'
 import { prisma } from '@/lib/db/prisma'
 import { sortByRoomNumber } from '@/lib/sortRooms'
+import { fromDbRoomType } from '@/lib/roomTypes'
 import bcrypt from 'bcryptjs'
 
 export async function GET() {
@@ -35,7 +36,7 @@ export async function GET() {
       dailyPlanRoomId: r.id,
       roomId: r.roomId,
       roomNumber: r.room.roomNumber,
-      roomType: r.roomType,
+      roomType: fromDbRoomType(r.roomType),
       priority: r.priority,
       priorityTime: r.priorityTime,
       guestCount: r.guestCount,

@@ -2,6 +2,7 @@
 import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { defaultPriorityTime, priorityTimeOptions } from '@/lib/dailyPlans/priorityTime'
+import { isStayoverRoomType, roomTypeOptions } from '@/lib/roomTypes'
 import { useUpdateRoomStatusMutation, useUpdateRoomTypeMutation } from '@/store/api/dailyPlanApi'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { buildWhatsAppAppLink, buildWhatsAppLink, normalizeWhatsAppChatLink } from '@/lib/whatsapp/buildLink'
@@ -128,7 +129,7 @@ export function RoomCard({
 
   function handleRoomTypeChange(nextType: RoomType) {
     setDraftRoomType(nextType)
-    if (nextType === 'stayover') {
+    if (isStayoverRoomType(nextType)) {
       setDraftPriority(false)
       setDraftPriorityTime(defaultPriorityTime)
     }
@@ -148,8 +149,8 @@ export function RoomCard({
     await updateRoomType({
       id: room.dailyPlanRoomId,
       roomType: draftRoomType,
-      priority: draftPriority,
-      priorityTime: draftPriority ? draftPriorityTime : null,
+      priority: draftRoomType === 'checkout' ? draftPriority : false,
+      priorityTime: draftRoomType === 'checkout' && draftPriority ? draftPriorityTime : null,
       guestCount: draftGuestCount,
     }).unwrap()
     setIsEditorOpen(false)
@@ -160,7 +161,8 @@ export function RoomCard({
       <div
         className={cn(
           'bg-white rounded-xl shadow-sm border px-3 py-2.5 flex items-center gap-3',
-          room.priority && 'border-l-4 border-l-orange-400'
+          room.priority && 'border-l-4 border-l-orange-400',
+          room.roomType === 'big-stayover' && 'border-amber-300 bg-amber-50/70'
         )}
       >
         <div
@@ -182,7 +184,16 @@ export function RoomCard({
                 👤 {room.guestCount}
               </span>
             )}
-            <span className="text-xs text-gray-400">{roomTypeLabel}</span>
+            <span
+              className={cn(
+                'text-xs px-1.5 py-0.5 rounded',
+                room.roomType === 'big-stayover'
+                  ? 'bg-amber-200/80 text-amber-900'
+                  : 'text-gray-400'
+              )}
+            >
+              {roomTypeLabel}
+            </span>
           </div>
           {room.updatedBy && (
             <p className="text-xs text-gray-400 mt-0.5">
@@ -211,7 +222,7 @@ export function RoomCard({
             <div className="space-y-2">
               <p className="text-sm font-medium text-gray-700">{t('roomType')}</p>
               <div className="flex rounded-lg overflow-hidden border border-gray-200 text-sm">
-                {(['checkout', 'stayover'] as RoomType[]).map((type) => (
+                {roomTypeOptions.map((type) => (
                   <button
                     key={type}
                     onClick={() => handleRoomTypeChange(type)}

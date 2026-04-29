@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth/authOptions'
 import { prisma } from '@/lib/db/prisma'
 import { sortByRoomNumber } from '@/lib/sortRooms'
 import { parsePlanDate } from '@/lib/dailyPlans/planDate'
+import { fromDbRoomType } from '@/lib/roomTypes'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ date: string }> }) {
   const session = await auth()
@@ -36,7 +37,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
       dailyPlanRoomId: r.id,
       roomId: r.roomId,
       roomNumber: r.room.roomNumber,
-      roomType: r.roomType,
+      roomType: fromDbRoomType(r.roomType),
       priority: r.priority,
       priorityTime: r.priorityTime,
       guestCount: r.guestCount,

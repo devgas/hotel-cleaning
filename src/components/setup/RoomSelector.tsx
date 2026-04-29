@@ -2,6 +2,7 @@
 import { useTranslations } from 'next-intl'
 import { defaultPriorityTime, priorityTimeOptions } from '@/lib/dailyPlans/priorityTime'
 import { cn } from '@/lib/utils'
+import { roomTypeOptions } from '@/lib/roomTypes'
 import type { RoomType } from '@/types'
 
 interface Room {
@@ -87,7 +88,7 @@ export function RoomSelector({
                         onChange={(e) => onTypeChange(room.id, e.target.value as RoomType)}
                         className="text-xs text-gray-700 bg-transparent focus:outline-none w-full"
                       >
-                        {(['checkout', 'stayover'] as RoomType[]).map((type) => (
+                        {roomTypeOptions.map((type) => (
                           <option key={type} value={type}>{t(type)}</option>
                         ))}
                       </select>

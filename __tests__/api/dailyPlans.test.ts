@@ -15,6 +15,11 @@ describe('validateDailyPlanInput', () => {
       rooms: [{ roomId: 1, roomType: 'checkout', priority: true, priorityTime: '09:00' }]
     }).success).toBe(true)
   })
+  it('accepts big stayover input', () => {
+    expect(validateDailyPlanInput({
+      rooms: [{ roomId: 1, roomType: 'big-stayover', priority: false }]
+    }).success).toBe(true)
+  })
   it('accepts valid input with explicit date', () => {
     expect(validateDailyPlanInput({
       date: '2026-04-02',

@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { Header } from '@/components/common/Header'
 import { RoomSelector } from '@/components/setup/RoomSelector'
 import { defaultPriorityTime } from '@/lib/dailyPlans/priorityTime'
+import { isStayoverRoomType } from '@/lib/roomTypes'
 import { cn } from '@/lib/utils'
 import { useGetRoomsQuery } from '@/store/api/roomsApi'
 import { useCreateDailyPlanMutation, useGetPlanByDateQuery } from '@/store/api/dailyPlanApi'
@@ -155,9 +156,9 @@ export default function SetupPage() {
           ? {
               ...r,
               roomType,
-              priority: roomType === 'stayover' ? false : r.priority,
+              priority: isStayoverRoomType(roomType) ? false : r.priority,
               priorityTime:
-                roomType === 'stayover'
+                isStayoverRoomType(roomType)
                   ? null
                   : r.priority
                     ? (r.priorityTime ?? defaultPriorityTime)
@@ -295,7 +296,7 @@ export default function SetupPage() {
               <span className="flex flex-col items-center gap-0.5">
                 <span>{t('save')} {activePlanLabel} ({selected.length})</span>
                 <span className="text-xs font-normal opacity-80">
-                  {t('checkout')} {selected.filter(r => r.roomType === 'checkout').length} · {t('stayover')} {selected.filter(r => r.roomType === 'stayover').length}
+                  {t('checkout')} {selected.filter((r) => r.roomType === 'checkout').length} · {t('stayover')} {selected.filter((r) => r.roomType === 'stayover').length} · {t('big-stayover')} {selected.filter((r) => r.roomType === 'big-stayover').length}
                 </span>
               </span>
             )}

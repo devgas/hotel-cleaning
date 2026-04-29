@@ -34,6 +34,7 @@
     "confirmOverride": "Saving will override the current plan for {date}. Continue?",
     "checkout": "Checkout",
     "stayover": "Stayover",
+    "big-stayover": "Big Stayover",
     "priority": "Priority",
     "priorityTime": "Priority Time",
     "noRooms": "No rooms selected"
@@ -44,6 +45,7 @@
     "priority": "Priority",
     "checkout": "Checkout",
     "stayover": "Stayover",
+    "big-stayover": "Big Stayover",
     "editPlan": "Edit Plan",
     "editRoom": "Edit Room",
     "roomType": "Room Type",

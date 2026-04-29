@@ -1,4 +1,4 @@
-export type RoomType = 'checkout' | 'stayover'
+export type RoomType = 'checkout' | 'stayover' | 'big-stayover'
 export type CleaningStatus = 'not_cleaned_yet' | 'cleaned' | 'not_needed'
 
 export interface RoomWithStatus {

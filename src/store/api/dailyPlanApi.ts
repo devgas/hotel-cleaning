@@ -11,7 +11,7 @@ interface CreatePlanInput {
   date?: string
   rooms: {
     roomId: number
-    roomType: 'checkout' | 'stayover'
+    roomType: RoomType
     priority: boolean
     priorityTime?: string | null
     guestCount?: number
