@@ -156,17 +156,25 @@ export function RoomCard({
     setIsEditorOpen(false)
   }
 
+  const isBigStayover = room.roomType === 'big-stayover'
+
   return (
     <>
       <div
         className={cn(
-          'bg-white rounded-xl shadow-sm border px-3 py-2.5 flex items-center gap-3',
+          'relative overflow-hidden rounded-xl border px-3 py-2.5 flex items-center gap-3 shadow-sm',
           room.priority && 'border-l-4 border-l-orange-400',
-          room.roomType === 'big-stayover' && 'border-amber-300 bg-amber-50/70'
+          isBigStayover ? 'border-amber-400 bg-amber-100/90 shadow-[0_8px_24px_-16px_rgba(245,158,11,0.85)]' : 'bg-white'
         )}
       >
+        {isBigStayover && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-y-0 left-0 w-2 bg-amber-500"
+          />
+        )}
         <div
-          className="flex-1 min-w-0"
+          className={cn('flex-1 min-w-0', isBigStayover && 'pl-2')}
           onPointerDown={handlePointerDown}
           onPointerUp={clearLongPressTimer}
           onPointerLeave={clearLongPressTimer}
@@ -186,9 +194,9 @@ export function RoomCard({
             )}
             <span
               className={cn(
-                'text-xs px-1.5 py-0.5 rounded',
-                room.roomType === 'big-stayover'
-                  ? 'bg-amber-200/80 text-amber-900'
+                'text-xs px-2 py-1 rounded font-medium',
+                isBigStayover
+                  ? 'bg-amber-500 text-white shadow-sm'
                   : 'text-gray-400'
               )}
             >
