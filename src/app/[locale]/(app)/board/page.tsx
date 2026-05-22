@@ -1,5 +1,6 @@
 'use client'
-import { useSyncExternalStore } from 'react'
+import Link from 'next/link'
+import { useEffect, useSyncExternalStore } from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
@@ -10,9 +11,16 @@ import { RoomCard } from '@/components/board/RoomCard'
 import { useGetPlanByDateQuery } from '@/store/api/dailyPlanApi'
 import { useGetSettingsQuery } from '@/store/api/settingsApi'
 import { isStayoverRoomType } from '@/lib/roomTypes'
+import {
+  createBoardViewSnapshot,
+  getUnreadRoomIds,
+  hasUnreadBoardChanges,
+  readBoardViewSnapshot,
+  saveBoardViewSnapshot,
+  subscribeToBoardUnreadChanges,
+} from '@/lib/boardUnread'
 import type { RootState } from '@/store'
 import type { RoomWithStatus } from '@/types'
-import Link from 'next/link'
 
 const POLL_INTERVAL = 15000
 
@@ -51,6 +59,24 @@ export default function BoardPage() {
   })
   const { data: settings } = useGetSettingsQuery()
 
+  useSyncExternalStore(
+    subscribeToBoardUnreadChanges,
+    () => readBoardViewSnapshot(todayDate)?.signature ?? '',
+    () => ''
+  )
+
+  const rooms = plan?.rooms ?? []
+  const currentSnapshot = createBoardViewSnapshot(todayDate, plan?.rooms)
+  const viewedSnapshot = readBoardViewSnapshot(todayDate)
+  const unreadRoomIds = getUnreadRoomIds(currentSnapshot, viewedSnapshot)
+
+  useEffect(() => {
+    if (!todayDate) return
+    if (hasUnreadBoardChanges(currentSnapshot, viewedSnapshot)) {
+      saveBoardViewSnapshot(currentSnapshot)
+    }
+  }, [todayDate, currentSnapshot, viewedSnapshot])
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -76,7 +102,6 @@ export default function BoardPage() {
     )
   }
 
-  const rooms = plan.rooms
   const cleaned = rooms.filter((r) => r.status === 'cleaned').length
   const notNeeded = rooms.filter((r) => r.status === 'not_needed').length
   const notCleaned = rooms.filter((r) => r.status === 'not_cleaned_yet').length
@@ -121,6 +146,7 @@ export default function BoardPage() {
           <RoomCard
             key={room.dailyPlanRoomId}
             room={room}
+            hasUnreadChange={unreadRoomIds.includes(room.dailyPlanRoomId)}
             whatsappEnabled={settings?.whatsappEnabled ?? false}
             whatsappChatLink={settings?.whatsappChatLink ?? ''}
             whatsappPhone={settings?.whatsappPhone ?? ''}

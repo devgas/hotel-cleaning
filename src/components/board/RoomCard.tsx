@@ -20,6 +20,7 @@ import {
 
 interface Props {
   room: RoomWithStatus
+  hasUnreadChange?: boolean
   whatsappEnabled: boolean
   whatsappChatLink: string
   whatsappPhone: string
@@ -32,6 +33,7 @@ const statusCycle: CleaningStatus[] = ['not_cleaned_yet', 'cleaned', 'not_needed
 
 export function RoomCard({
   room,
+  hasUnreadChange = false,
   whatsappEnabled,
   whatsappChatLink,
   whatsappPhone,
@@ -181,7 +183,12 @@ export function RoomCard({
           onPointerCancel={clearLongPressTimer}
         >
           <div className="flex items-center gap-2">
-            <span className="text-lg font-bold text-gray-900">{room.roomNumber}</span>
+            <span className="flex items-center gap-2 text-lg font-bold text-gray-900">
+              <span>{room.roomNumber}</span>
+              {hasUnreadChange && (
+                <span className="block h-2.5 w-2.5 rounded-full bg-red-500" aria-label="Unread change" />
+              )}
+            </span>
             {room.priority && (
               <span className="text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">
                 ★ {room.priorityTime ?? defaultPriorityTime}
