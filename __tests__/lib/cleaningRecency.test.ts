@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getDaysSinceCleaned, getDaysSinceCleanedLabel, isBeforePlanDate } from '@/lib/cleaningRecency'
+import { getDaysSinceCleaned, getDaysSinceCleanedLabel, getDaysSincePreviousCheckout, isBeforePlanDate } from '@/lib/cleaningRecency'
 
 describe('cleaningRecency', () => {
   it('returns calendar days between the plan date and last cleaned date', () => {
@@ -16,6 +16,11 @@ describe('cleaningRecency', () => {
     expect(isBeforePlanDate('2026-06-06', '2026-06-05')).toBe(true)
     expect(isBeforePlanDate('2026-06-06', '2026-06-06')).toBe(false)
     expect(isBeforePlanDate('2026-06-06', '2026-06-07')).toBe(false)
+  })
+
+  it('returns days since the previous checkout date', () => {
+    expect(getDaysSincePreviousCheckout('2026-06-06', '2026-06-05')).toBe(1)
+    expect(getDaysSincePreviousCheckout('2026-06-06', null)).toBeNull()
   })
 
   it('formats the compact Ukrainian day label', () => {

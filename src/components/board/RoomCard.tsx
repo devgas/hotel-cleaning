@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { BrushCleaning } from 'lucide-react'
+import { DoorOpen } from 'lucide-react'
 import { defaultPriorityTime, priorityTimeOptions } from '@/lib/dailyPlans/priorityTime'
 import { isStayoverRoomType, roomTypeOptions } from '@/lib/roomTypes'
 import { useUpdateRoomStatusMutation, useUpdateRoomTypeMutation } from '@/store/api/dailyPlanApi'
@@ -215,14 +215,14 @@ export function RoomCard({
               {room.guestCount}
             </span>
           )}
-          {room.daysSinceLastCleaned !== null && room.daysSinceLastCleaned !== undefined && (
+          {room.daysSinceLastCheckout !== null && room.daysSinceLastCheckout !== undefined && (
             <span
               className="inline-flex h-6 items-center justify-center gap-1 rounded bg-sky-50 px-1.5 text-xs font-medium text-sky-700"
-              title={t('lastCleaned')}
-              aria-label={t('lastCleaned') + ': ' + getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
+              title={t('lastCheckout')}
+              aria-label={t('lastCheckout') + ': ' + getDaysSinceCleanedLabel(room.daysSinceLastCheckout)}
             >
-              <BrushCleaning className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-              {getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
+              <DoorOpen className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              {getDaysSinceCleanedLabel(room.daysSinceLastCheckout)}
             </span>
           )}
         </div>

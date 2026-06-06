@@ -17,6 +17,10 @@ export function isBeforePlanDate(planDate: string, cleanedDate: string): boolean
   return cleanedDay < planDay
 }
 
+export function getDaysSincePreviousCheckout(planDate: string, lastCheckoutDate: string | null): number | null {
+  return getDaysSinceCleaned(planDate, lastCheckoutDate)
+}
+
 export function getDaysSinceCleaned(planDate: string, lastCleanedDate: string | null): number | null {
   if (!lastCleanedDate) return null
 

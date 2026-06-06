@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db/prisma'
 import { sortByRoomNumber } from '@/lib/sortRooms'
 import { parsePlanDate } from '@/lib/dailyPlans/planDate'
 import { fromDbRoomType } from '@/lib/roomTypes'
-import { getDaysSinceCleaned } from '@/lib/cleaningRecency'
+import { getDaysSincePreviousCheckout } from '@/lib/cleaningRecency'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ date: string }> }) {
   const session = await auth()
@@ -31,11 +31,11 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
 
   const sorted = sortByRoomNumber(plan.rooms, (r) => r.room.roomNumber)
   const roomIds = sorted.map((room) => room.roomId)
-  const lastCleanedRows = roomIds.length > 0
+  const lastCheckoutRows = roomIds.length > 0
     ? await prisma.dailyPlanRoom.findMany({
         where: {
           roomId: { in: roomIds },
-          status: 'cleaned',
+          roomType: 'checkout',
           dailyPlan: {
             hotelId,
             date: { lt: plan.date },
@@ -51,10 +51,10 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
         ],
       })
     : []
-  const lastCleanedByRoomId = new Map<number, string>()
-  for (const row of lastCleanedRows) {
-    if (!lastCleanedByRoomId.has(row.roomId)) {
-      lastCleanedByRoomId.set(row.roomId, row.dailyPlan.date.toISOString().split('T')[0])
+  const lastCheckoutByRoomId = new Map<number, string>()
+  for (const row of lastCheckoutRows) {
+    if (!lastCheckoutByRoomId.has(row.roomId)) {
+      lastCheckoutByRoomId.set(row.roomId, row.dailyPlan.date.toISOString().split('T')[0])
     }
   }
   const planDate = plan.date.toISOString().split('T')[0]
@@ -71,7 +71,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
       priorityTime: r.priorityTime,
       guestCount: r.guestCount,
       status: r.status,
-      daysSinceLastCleaned: getDaysSinceCleaned(planDate, lastCleanedByRoomId.get(r.roomId) ?? null),
+      daysSinceLastCheckout: getDaysSincePreviousCheckout(planDate, lastCheckoutByRoomId.get(r.roomId) ?? null),
       updatedBy: r.updatedBy?.name ?? null,
       updatedAt: r.updatedAt.toISOString(),
     })),
