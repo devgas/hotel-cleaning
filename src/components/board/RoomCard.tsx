@@ -165,7 +165,7 @@ export function RoomCard({
     <>
       <div
         className={cn(
-          'relative grid grid-cols-[minmax(0,1fr)_3rem_auto] items-center gap-3 overflow-hidden rounded-xl border px-3 py-2.5 shadow-sm',
+          'relative grid grid-cols-[minmax(0,1fr)_3rem_6rem] items-center gap-3 overflow-hidden rounded-xl border px-3 py-2.5 shadow-sm',
           room.priority && 'border-l-4 border-l-orange-400',
           isBigStayover ? 'border-amber-400 bg-amber-100/90 shadow-[0_8px_24px_-16px_rgba(245,158,11,0.85)]' : 'bg-white'
         )}
