@@ -9,6 +9,14 @@ function toUtcDay(value: string): number | null {
   return Date.UTC(year, month - 1, day)
 }
 
+export function isBeforePlanDate(planDate: string, cleanedDate: string): boolean {
+  const planDay = toUtcDay(planDate)
+  const cleanedDay = toUtcDay(cleanedDate)
+  if (planDay === null || cleanedDay === null) return false
+
+  return cleanedDay < planDay
+}
+
 export function getDaysSinceCleaned(planDate: string, lastCleanedDate: string | null): number | null {
   if (!lastCleanedDate) return null
 

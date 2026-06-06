@@ -38,7 +38,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
           status: 'cleaned',
           dailyPlan: {
             hotelId,
-            date: { lte: plan.date },
+            date: { lt: plan.date },
           },
         },
         select: {
