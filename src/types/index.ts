@@ -10,6 +10,7 @@ export interface RoomWithStatus {
   priorityTime?: string | null
   guestCount: number
   status: CleaningStatus
+  daysSinceLastCleaned?: number | null
   updatedBy?: string | null
   updatedAt: string
   dailyPlanRoomId: number

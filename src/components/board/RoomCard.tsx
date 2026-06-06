@@ -1,10 +1,12 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { BrushCleaning } from 'lucide-react'
 import { defaultPriorityTime, priorityTimeOptions } from '@/lib/dailyPlans/priorityTime'
 import { isStayoverRoomType, roomTypeOptions } from '@/lib/roomTypes'
 import { useUpdateRoomStatusMutation, useUpdateRoomTypeMutation } from '@/store/api/dailyPlanApi'
 import { StatusBadge } from '@/components/common/StatusBadge'
+import { getDaysSinceCleanedLabel } from '@/lib/cleaningRecency'
 import { buildWhatsAppAppLink, buildWhatsAppLink, normalizeWhatsAppChatLink } from '@/lib/whatsapp/buildLink'
 import type { RoomWithStatus, CleaningStatus, RoomType } from '@/types'
 import { cn } from '@/lib/utils'
@@ -197,6 +199,16 @@ export function RoomCard({
             {room.guestCount >= 1 && (
               <span className="text-xs bg-green-50 text-green-700 px-1.5 py-0.5 rounded">
                 👤 {room.guestCount}
+              </span>
+            )}
+            {room.daysSinceLastCleaned !== null && room.daysSinceLastCleaned !== undefined && (
+              <span
+                className="inline-flex items-center gap-1 rounded bg-sky-50 px-1.5 py-0.5 text-xs font-medium text-sky-700"
+                title={t('lastCleaned')}
+                aria-label={t('lastCleaned') + ': ' + getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
+              >
+                <BrushCleaning className="h-3.5 w-3.5" aria-hidden="true" />
+                {getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
               </span>
             )}
             <span

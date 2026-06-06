@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db/prisma'
 import { sortByRoomNumber } from '@/lib/sortRooms'
 import { parsePlanDate } from '@/lib/dailyPlans/planDate'
 import { fromDbRoomType } from '@/lib/roomTypes'
+import { getDaysSinceCleaned } from '@/lib/cleaningRecency'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ date: string }> }) {
   const session = await auth()
@@ -29,10 +30,38 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
   if (!plan) return NextResponse.json(null)
 
   const sorted = sortByRoomNumber(plan.rooms, (r) => r.room.roomNumber)
+  const roomIds = sorted.map((room) => room.roomId)
+  const lastCleanedRows = roomIds.length > 0
+    ? await prisma.dailyPlanRoom.findMany({
+        where: {
+          roomId: { in: roomIds },
+          status: 'cleaned',
+          dailyPlan: {
+            hotelId,
+            date: { lte: plan.date },
+          },
+        },
+        select: {
+          roomId: true,
+          dailyPlan: { select: { date: true } },
+        },
+        orderBy: [
+          { dailyPlan: { date: 'desc' } },
+          { id: 'desc' },
+        ],
+      })
+    : []
+  const lastCleanedByRoomId = new Map<number, string>()
+  for (const row of lastCleanedRows) {
+    if (!lastCleanedByRoomId.has(row.roomId)) {
+      lastCleanedByRoomId.set(row.roomId, row.dailyPlan.date.toISOString().split('T')[0])
+    }
+  }
+  const planDate = plan.date.toISOString().split('T')[0]
 
   return NextResponse.json({
     id: plan.id,
-    date: plan.date.toISOString().split('T')[0],
+    date: planDate,
     rooms: sorted.map((r) => ({
       dailyPlanRoomId: r.id,
       roomId: r.roomId,
@@ -42,6 +71,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ dat
       priorityTime: r.priorityTime,
       guestCount: r.guestCount,
       status: r.status,
+      daysSinceLastCleaned: getDaysSinceCleaned(planDate, lastCleanedByRoomId.get(r.roomId) ?? null),
       updatedBy: r.updatedBy?.name ?? null,
       updatedAt: r.updatedAt.toISOString(),
     })),
