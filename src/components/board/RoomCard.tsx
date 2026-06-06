@@ -103,7 +103,6 @@ export function RoomCard({
     not_needed: t('notNeeded'),
   }
 
-  const roomTypeLabel = t(room.roomType)
   const canSendWhatsApp =
     canUseWhatsAppFlow && (room.status !== 'cleaned' || whatsappAllowAfterCleaned)
 
@@ -166,7 +165,7 @@ export function RoomCard({
     <>
       <div
         className={cn(
-          'relative overflow-hidden rounded-xl border px-3 py-2.5 flex items-center gap-3 shadow-sm',
+          'relative grid grid-cols-[minmax(0,1fr)_3rem_auto] items-center gap-3 overflow-hidden rounded-xl border px-3 py-2.5 shadow-sm',
           room.priority && 'border-l-4 border-l-orange-400',
           isBigStayover ? 'border-amber-400 bg-amber-100/90 shadow-[0_8px_24px_-16px_rgba(245,158,11,0.85)]' : 'bg-white'
         )}
@@ -196,36 +195,6 @@ export function RoomCard({
                 ★ {room.priorityTime ?? defaultPriorityTime}
               </span>
             )}
-            {(room.guestCount >= 1 || room.daysSinceLastCleaned !== null && room.daysSinceLastCleaned !== undefined) && (
-              <span className="flex w-12 shrink-0 flex-col items-stretch gap-1">
-                {room.guestCount >= 1 && (
-                  <span className="inline-flex h-6 items-center justify-center gap-1 rounded bg-green-50 px-1.5 text-xs font-medium text-green-700">
-                    <span aria-hidden="true">👤</span>
-                    {room.guestCount}
-                  </span>
-                )}
-                {room.daysSinceLastCleaned !== null && room.daysSinceLastCleaned !== undefined && (
-                  <span
-                    className="inline-flex h-6 items-center justify-center gap-1 rounded bg-sky-50 px-1.5 text-xs font-medium text-sky-700"
-                    title={t('lastCleaned')}
-                    aria-label={t('lastCleaned') + ': ' + getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
-                  >
-                    <BrushCleaning className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                    {getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
-                  </span>
-                )}
-              </span>
-            )}
-            <span
-              className={cn(
-                'min-w-0 shrink text-xs px-2 py-1 rounded font-medium',
-                isBigStayover
-                  ? 'bg-amber-500 text-white shadow-sm'
-                  : 'text-gray-400'
-              )}
-            >
-              {roomTypeLabel}
-            </span>
           </div>
           {room.updatedBy && (
             <p className="text-xs text-gray-400 mt-0.5">
@@ -233,7 +202,31 @@ export function RoomCard({
             </p>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        <div
+          className="flex w-12 -translate-x-5 flex-col items-stretch justify-center gap-1"
+          onPointerDown={handlePointerDown}
+          onPointerUp={clearLongPressTimer}
+          onPointerLeave={clearLongPressTimer}
+          onPointerCancel={clearLongPressTimer}
+        >
+          {room.guestCount >= 1 && (
+            <span className="inline-flex h-6 items-center justify-center gap-1 rounded bg-green-50 px-1.5 text-xs font-medium text-green-700">
+              <span aria-hidden="true">👤</span>
+              {room.guestCount}
+            </span>
+          )}
+          {room.daysSinceLastCleaned !== null && room.daysSinceLastCleaned !== undefined && (
+            <span
+              className="inline-flex h-6 items-center justify-center gap-1 rounded bg-sky-50 px-1.5 text-xs font-medium text-sky-700"
+              title={t('lastCleaned')}
+              aria-label={t('lastCleaned') + ': ' + getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
+            >
+              <BrushCleaning className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              {getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center justify-end gap-2">
           {canSendWhatsApp && (
             <button onClick={() => openWhatsApp(true)} className="text-green-600 text-lg" title={t('openWhatsApp')}>
               💬
