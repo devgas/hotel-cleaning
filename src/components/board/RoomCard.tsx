@@ -196,24 +196,29 @@ export function RoomCard({
                 ★ {room.priorityTime ?? defaultPriorityTime}
               </span>
             )}
-            {room.guestCount >= 1 && (
-              <span className="text-xs bg-green-50 text-green-700 px-1.5 py-0.5 rounded">
-                👤 {room.guestCount}
-              </span>
-            )}
-            {room.daysSinceLastCleaned !== null && room.daysSinceLastCleaned !== undefined && (
-              <span
-                className="inline-flex items-center gap-1 rounded bg-sky-50 px-1.5 py-0.5 text-xs font-medium text-sky-700"
-                title={t('lastCleaned')}
-                aria-label={t('lastCleaned') + ': ' + getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
-              >
-                <BrushCleaning className="h-3.5 w-3.5" aria-hidden="true" />
-                {getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
+            {(room.guestCount >= 1 || room.daysSinceLastCleaned !== null && room.daysSinceLastCleaned !== undefined) && (
+              <span className="flex w-12 shrink-0 flex-col items-stretch gap-1">
+                {room.guestCount >= 1 && (
+                  <span className="inline-flex h-6 items-center justify-center gap-1 rounded bg-green-50 px-1.5 text-xs font-medium text-green-700">
+                    <span aria-hidden="true">👤</span>
+                    {room.guestCount}
+                  </span>
+                )}
+                {room.daysSinceLastCleaned !== null && room.daysSinceLastCleaned !== undefined && (
+                  <span
+                    className="inline-flex h-6 items-center justify-center gap-1 rounded bg-sky-50 px-1.5 text-xs font-medium text-sky-700"
+                    title={t('lastCleaned')}
+                    aria-label={t('lastCleaned') + ': ' + getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
+                  >
+                    <BrushCleaning className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                    {getDaysSinceCleanedLabel(room.daysSinceLastCleaned)}
+                  </span>
+                )}
               </span>
             )}
             <span
               className={cn(
-                'text-xs px-2 py-1 rounded font-medium',
+                'min-w-0 shrink text-xs px-2 py-1 rounded font-medium',
                 isBigStayover
                   ? 'bg-amber-500 text-white shadow-sm'
                   : 'text-gray-400'
