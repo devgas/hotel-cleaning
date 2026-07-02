@@ -69,6 +69,7 @@ export default function BoardPage() {
   const currentSnapshot = createBoardViewSnapshot(todayDate, plan?.rooms)
   const viewedSnapshot = readBoardViewSnapshot(todayDate)
   const unreadRoomIds = getUnreadRoomIds(currentSnapshot, viewedSnapshot)
+  const hasBoardUnread = unreadRoomIds.length > 0
 
   useEffect(() => {
     if (!todayDate) return
@@ -133,6 +134,15 @@ export default function BoardPage() {
     <div>
       <Header title={t('title')} />
       <div className="sticky top-[52px] z-30 bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
+        {hasBoardUnread && (
+          <div className="flex items-center justify-between gap-3 border-b border-red-100 bg-red-50 px-4 py-2 text-xs font-medium text-red-700">
+            <span className="inline-flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-red-500" />
+              {t('newUpdates')}
+            </span>
+            <span>{unreadRoomIds.length}</span>
+          </div>
+        )}
         {showEaster && (
           <div className="text-center text-sm py-1 bg-gradient-to-r from-yellow-50 via-pink-50 to-purple-50">
             🕯️ {t('happyEaster')} 🌷🥚🐣🌸

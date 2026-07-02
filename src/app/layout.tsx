@@ -10,13 +10,17 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#2563eb',
+  themeColor: '#006b63',
 }
 
 export const metadata: Metadata = {
   title: 'Hotel Cleaning',
   description: 'Hotel housekeeping management',
   manifest: '/manifest.json',
+  icons: {
+    icon: '/hotel-cleaning-app-icon.png',
+    apple: '/hotel-cleaning-app-icon.png',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',

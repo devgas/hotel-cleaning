@@ -59,7 +59,8 @@
     "updatedBy": "Updated by:",
     "noPlan": "No plan for today",
     "goToSetup": "Set Up",
-    "happyEaster": "Happy Easter!"
+    "happyEaster": "Happy Easter!",
+    "newUpdates": "New updates"
   },
   "history": {
     "title": "History",
@@ -98,7 +99,13 @@
     "notificationsOff": "Enable notifications",
     "notificationsDenied": "Notifications blocked in browser settings",
     "notificationsDeniedHint": "Open browser settings → Site settings → Notifications → Allow for this site",
-    "notificationsUnsupported": "Notifications are not supported on this device"
+    "notificationsUnsupported": "Notifications are not supported on this device",
+    "installApp": "App",
+    "installAppAction": "Install app",
+    "installAppOpening": "Opening...",
+    "installAppInstalled": "Installed on this device",
+    "installAppHint": "Use the browser menu if the install button is unavailable.",
+    "installAppIosHint": "In Safari, tap Share and then Add to Home Screen."
   },
   "common": {
     "loading": "Loading...",

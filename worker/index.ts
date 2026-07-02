@@ -9,7 +9,7 @@ sw.addEventListener('push', (event: { data: { json: () => { title: string; body:
   event.waitUntil(
     sw.registration.showNotification(data.title, {
       body: data.body,
-      icon: '/icons/icon-192x192.png',
+      icon: '/icons/icon-192.png',
     })
   )
 })

@@ -6,6 +6,7 @@ import { Header } from '@/components/common/Header'
 import { RoomManager } from '@/components/settings/RoomManager'
 import { WhatsAppSettings } from '@/components/settings/WhatsAppSettings'
 import { NotificationToggle } from '@/components/settings/NotificationToggle'
+import { InstallAppButton } from '@/components/pwa/InstallAppButton'
 import { useGetSettingsQuery, useUpdateSettingsMutation } from '@/store/api/settingsApi'
 import { Button } from '@/components/ui/button'
 import type { AppSettings } from '@/types'
@@ -25,7 +26,10 @@ export default function SettingsPage() {
   const [clearLoading, setClearLoading] = useState(false)
 
   useEffect(() => {
-    if (remoteSettings) setLocalSettings(remoteSettings)
+    if (remoteSettings) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLocalSettings(remoteSettings)
+    }
   }, [remoteSettings])
 
   function merge(patch: Partial<AppSettings>) {
@@ -65,6 +69,7 @@ export default function SettingsPage() {
       <div className="p-4 space-y-6">
         <RoomManager />
         <WhatsAppSettings settings={localSettings} onChange={merge} />
+        <InstallAppButton />
         <NotificationToggle />
         <div className="space-y-2">
           <h3 className="font-semibold text-gray-700">{t('language')}</h3>
