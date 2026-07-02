@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
+import { InstallAppButton } from '@/components/pwa/InstallAppButton'
 
 export function LoginForm() {
   const t = useTranslations('auth')
@@ -77,6 +78,9 @@ export function LoginForm() {
           <div className="mt-6 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm text-blue-900">
             <p className="font-medium">{t('installAppTitle')}</p>
             <p className="mt-1 text-blue-800">{t('installAppMessage')}</p>
+            <div className="mt-3 rounded-lg bg-white/80 p-3 text-gray-900">
+              <InstallAppButton />
+            </div>
           </div>
         </CardContent>
       </Card>
