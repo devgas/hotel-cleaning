@@ -29,6 +29,16 @@ const features = [
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://hotel-cleaning.vercel.app'
 
+const plerdyCode = `
+var _protocol="https:"==document.location.protocol?"https://":"http://";
+_site_hash_code = "cd7ba2331e2dc8f6ae8f48a5fc0e03f8",_suid=78161, plerdyScript=document.createElement("script");
+plerdyScript.setAttribute("defer",""),plerdyScript.dataset.plerdymainscript="plerdymainscript",
+plerdyScript.src="https://a.plerdy.com/public/js/click/main.js?v="+Math.random();
+var plerdymainscript=document.querySelector("[data-plerdymainscript='plerdymainscript']");
+plerdymainscript&&plerdymainscript.parentNode.removeChild(plerdymainscript);
+try{document.head.appendChild(plerdyScript)}catch(t){console.log(t,"unable add script tag")}
+`
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: 'Hotel Cleaning Management Solution | Housekeeping App',
@@ -70,7 +80,8 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#f7faf9] text-[#071a3a]">
+    <>
+      <main className="min-h-screen overflow-hidden bg-[#f7faf9] text-[#071a3a]">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -99,6 +110,9 @@ export default function Home() {
         <img
           src="/hotel-cleaning-desktop-bg.png"
           alt="Hotel Cleaning Management application concept with mobile dashboard and cleaning cart"
+          width="1536"
+          height="1024"
+          fetchPriority="high"
           className="absolute inset-0 -z-10 hidden h-full w-full object-cover object-right opacity-95 lg:block"
         />
         <div className="absolute inset-0 -z-10 hidden bg-gradient-to-r from-white via-white/90 to-white/20 lg:block" />
@@ -109,6 +123,8 @@ export default function Home() {
             <img
               src="/hotel-cleaning-app-icon.png"
               alt=""
+              width="1024"
+              height="1024"
               className="h-14 w-14 rounded-2xl object-cover shadow-[0_16px_35px_rgba(0,77,77,0.24)] sm:h-16 sm:w-16"
               aria-hidden="true"
             />
@@ -134,7 +150,10 @@ export default function Home() {
             <img
               src="/hotel-cleaning-mobile-bg.png"
               alt="Hotel cleaning mobile app preview with housekeeping cart"
-              className="mt-5 h-auto w-full rounded-3xl border border-white/80 object-cover shadow-[0_18px_48px_rgba(8,49,67,0.18)] lg:hidden"
+              width="1024"
+              height="1792"
+              fetchPriority="high"
+              className="mt-5 aspect-[4/7] h-auto w-full rounded-3xl border border-white/80 object-cover shadow-[0_18px_48px_rgba(8,49,67,0.18)] lg:hidden"
             />
             <p className="mt-5 max-w-2xl text-lg leading-8 text-[#193051] sm:text-xl">
               A test housekeeping management application for room cleaning boards, task status tracking,
@@ -189,6 +208,13 @@ export default function Home() {
           </a>
         </section>
       </section>
-    </main>
+      </main>
+      <script
+        type="text/javascript"
+        defer
+        data-plerdy_code="1"
+        dangerouslySetInnerHTML={{ __html: plerdyCode }}
+      />
+    </>
   )
 }

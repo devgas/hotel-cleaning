@@ -2,7 +2,7 @@
   "name": "Hotel Cleaning",
   "short_name": "Cleaning",
   "description": "Hotel housekeeping management",
-  "start_url": "/",
+  "start_url": "/uk/board",
   "display": "standalone",
   "background_color": "#031f20",
   "theme_color": "#006b63",
