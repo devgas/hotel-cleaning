@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { ReduxProvider } from '@/store/provider'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Analytics } from '@vercel/analytics/next'
 import { ServiceWorkerRegistration } from '@/components/pwa/ServiceWorkerRegistration'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] })
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ReduxProvider>{children}</ReduxProvider>
         <ServiceWorkerRegistration />
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   )
