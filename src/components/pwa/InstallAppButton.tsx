@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Download, Smartphone } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
@@ -26,7 +27,7 @@ function isIosSafari() {
   return /iPad|iPhone|iPod/.test(ua) && /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua)
 }
 
-export function InstallAppButton() {
+export function InstallAppButton({ compact = false }: { compact?: boolean }) {
   const t = useTranslations('settings')
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [installed, setInstalled] = useState(false)
@@ -37,10 +38,6 @@ export function InstallAppButton() {
   useEffect(() => {
     setInstalled(isStandaloneMode())
     setIosSafari(isIosSafari())
-
-    if ('serviceWorker' in navigator) {
-      void navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => undefined)
-    }
 
     const displayModeQuery = window.matchMedia?.('(display-mode: standalone)')
     const handleDisplayModeChange = () => setInstalled(isStandaloneMode())
@@ -81,10 +78,15 @@ export function InstallAppButton() {
   }
 
   return (
-    <div className="space-y-2">
-      <h3 className="font-semibold text-gray-700">{t('installApp')}</h3>
+    <div className={cn('space-y-2', compact && 'space-y-2.5')}>
+      {!compact && <h3 className="font-semibold text-gray-700">{t('installApp')}</h3>}
       {installed ? (
-        <p className="inline-flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+        <p
+          className={cn(
+            'inline-flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700',
+            compact && 'w-full justify-center rounded-xl'
+          )}
+        >
           <Smartphone className="h-4 w-4" aria-hidden="true" />
           {t('installAppInstalled')}
         </p>
@@ -93,7 +95,7 @@ export function InstallAppButton() {
           <Button
             type="button"
             variant="outline"
-            className="w-full justify-center"
+            className={cn('w-full justify-center', compact && 'h-10 rounded-xl border-slate-300 bg-slate-50')}
             onClick={install}
             disabled={busy}
           >
@@ -101,7 +103,7 @@ export function InstallAppButton() {
             {busy ? t('installAppOpening') : t('installAppAction')}
           </Button>
           {(showHint || iosSafari || !deferredPrompt) && (
-            <p className="text-xs text-gray-400">
+            <p className={cn('text-xs text-gray-400', compact && 'leading-5 text-slate-500')}>
               {iosSafari ? t('installAppIosHint') : t('installAppHint')}
             </p>
           )}

@@ -42,4 +42,12 @@ describe('validateDailyPlanInput', () => {
       rooms: [{ roomId: 1, roomType: 'checkout', priority: true, priorityTime: '08:00' }]
     }).success).toBe(false)
   })
+  it('rejects duplicate room ids', () => {
+    expect(validateDailyPlanInput({
+      rooms: [
+        { roomId: 1, roomType: 'checkout', priority: false },
+        { roomId: 1, roomType: 'stayover', priority: false },
+      ]
+    }).success).toBe(false)
+  })
 })

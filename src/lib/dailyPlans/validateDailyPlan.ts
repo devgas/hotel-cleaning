@@ -23,6 +23,19 @@ const planRoomSchema = z.object({
 const dailyPlanSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   rooms: z.array(planRoomSchema).min(1, 'At least one room required'),
+}).superRefine((value, ctx) => {
+  const seenRoomIds = new Set<number>()
+
+  for (const [index, room] of value.rooms.entries()) {
+    if (seenRoomIds.has(room.roomId)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['rooms', index, 'roomId'],
+        message: 'Room can only be selected once',
+      })
+    }
+    seenRoomIds.add(room.roomId)
+  }
 })
 
 export function validateDailyPlanInput(input: unknown) {

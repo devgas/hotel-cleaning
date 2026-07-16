@@ -4,13 +4,14 @@ import { useEffect, useSyncExternalStore } from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
+import { AlertCircle, ClipboardList, Sparkles } from 'lucide-react'
 import { Header } from '@/components/common/Header'
 import { SummaryCounters } from '@/components/board/SummaryCounters'
 import { BoardTabs } from '@/components/board/BoardTabs'
 import { RoomCard } from '@/components/board/RoomCard'
 import { useGetPlanByDateQuery } from '@/store/api/dailyPlanApi'
 import { useGetSettingsQuery } from '@/store/api/settingsApi'
-import { isStayoverRoomType } from '@/lib/roomTypes'
+import { filterBoardRooms, getBoardViewMetrics } from '@/lib/boardView'
 import {
   createBoardViewSnapshot,
   getUnreadRoomIds,
@@ -20,15 +21,8 @@ import {
   subscribeToBoardUnreadChanges,
 } from '@/lib/boardUnread'
 import type { RootState } from '@/store'
-import type { RoomWithStatus } from '@/types'
 
 const POLL_INTERVAL = 15000
-
-// Easter decoration — remove after 2026-04-14
-const EASTER_END = new Date('2026-04-14T23:59:59')
-function isEaster() {
-  return new Date() <= EASTER_END
-}
 
 function getTodayDate() {
   const d = new Date()
@@ -47,6 +41,8 @@ function getClientDate() {
 
 export default function BoardPage() {
   const t = useTranslations('board')
+  const tCommon = useTranslations('common')
+  const tSetup = useTranslations('setup')
   const { locale } = useParams<{ locale: string }>()
   const activeTab = useSelector((s: RootState) => s.ui.boardTab)
   const isOnline = useSelector((s: RootState) => s.ui.isOnline)
@@ -80,8 +76,24 @@ export default function BoardPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-500">...</p>
+      <div>
+        <Header title={t('title')} />
+        <div className="space-y-3 bg-slate-50 px-3 py-4" aria-label={tCommon('loading')} aria-busy="true">
+          <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+            <div className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-500">
+              <ClipboardList className="h-4 w-4" aria-hidden="true" />
+              {t('loadingBoard')}
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {[0, 1, 2].map((item) => (
+                <div key={item} className="h-16 animate-pulse rounded-lg bg-slate-100" />
+              ))}
+            </div>
+          </div>
+          {[0, 1, 2, 3, 4].map((item) => (
+            <div key={item} className="h-20 animate-pulse rounded-xl border bg-white shadow-sm" />
+          ))}
+        </div>
       </div>
     )
   }
@@ -90,11 +102,15 @@ export default function BoardPage() {
     return (
       <div>
         <Header title={t('title')} />
-        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 p-4">
-          <p className="text-gray-500">{t('noPlan')}</p>
+        <div className="mx-auto flex min-h-[60vh] max-w-sm flex-col items-center justify-center gap-4 p-4 text-center">
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-5 shadow-sm">
+            <ClipboardList className="mx-auto mb-3 h-9 w-9 text-slate-400" aria-hidden="true" />
+            <p className="text-lg font-semibold text-slate-900">{t('noPlan')}</p>
+            <p className="mt-2 text-sm text-slate-500">{t('noPlanHint')}</p>
+          </div>
           <Link
             href={`/${locale}/setup`}
-            className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-medium"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {t('goToSetup')}
           </Link>
@@ -103,68 +119,46 @@ export default function BoardPage() {
     )
   }
 
-  const cleaned = rooms.filter((r) => r.status === 'cleaned').length
-  const notNeeded = rooms.filter((r) => r.status === 'not_needed').length
-  const notCleaned = rooms.filter((r) => r.status === 'not_cleaned_yet').length
-
-  function tabStats(subset: typeof rooms) {
-    return {
-      total: subset.length,
-      cleaned: subset.filter((r) => r.status === 'cleaned').length,
-      notCleaned: subset.filter((r) => r.status === 'not_cleaned_yet').length,
-    }
-  }
-
-  const tabCounts = {
-    all: tabStats(rooms),
-    priority: tabStats(rooms.filter((r) => r.priority)),
-    checkout: tabStats(rooms.filter((r) => r.roomType === 'checkout')),
-    stayover: tabStats(rooms.filter((r) => isStayoverRoomType(r.roomType))),
-  }
-
-  const filtered: RoomWithStatus[] = rooms.filter((r) => {
-    if (activeTab === 'checkout') return r.roomType === 'checkout'
-    if (activeTab === 'stayover') return isStayoverRoomType(r.roomType)
-    return true
-  })
-
-  const showEaster = isEaster()
+  const { cleaned, notNeeded, notCleaned, tabCounts } = getBoardViewMetrics(rooms)
+  const filtered = filterBoardRooms(rooms, activeTab)
 
   return (
     <div>
       <Header title={t('title')} />
-      <div className="sticky top-[52px] z-30 bg-white shadow-[0_2px_8px_0_rgba(0,0,0,0.06)]">
+      <div className="sticky top-[52px] z-30 bg-white shadow-[0_2px_8px_0_rgba(15,23,42,0.08)]">
         {hasBoardUnread && (
-          <div className="flex items-center justify-between gap-3 border-b border-red-100 bg-red-50 px-4 py-2 text-xs font-medium text-red-700">
+          <div className="flex items-center justify-between gap-3 border-b border-red-100 bg-red-50 px-4 py-2 text-xs font-bold text-red-700">
             <span className="inline-flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-red-500" />
+              <AlertCircle className="h-4 w-4" aria-hidden="true" />
               {t('newUpdates')}
             </span>
-            <span>{unreadRoomIds.length}</span>
-          </div>
-        )}
-        {showEaster && (
-          <div className="text-center text-sm py-1 bg-gradient-to-r from-yellow-50 via-pink-50 to-purple-50">
-            🕯️ {t('happyEaster')} 🌷🥚🐣🌸
+            <span>{t('roomsCount', { count: unreadRoomIds.length })}</span>
           </div>
         )}
         <SummaryCounters total={rooms.length} cleaned={cleaned} notNeeded={notNeeded} notCleaned={notCleaned} />
         <BoardTabs counts={tabCounts} />
       </div>
-      <div className="px-3 pt-2 pb-4 space-y-1.5">
-        {filtered.map((room) => (
-          <RoomCard
-            key={room.dailyPlanRoomId}
-            room={room}
-            hasUnreadChange={unreadRoomIds.includes(room.dailyPlanRoomId)}
-            whatsappEnabled={settings?.whatsappEnabled ?? false}
-            whatsappChatLink={settings?.whatsappChatLink ?? ''}
-            whatsappPhone={settings?.whatsappPhone ?? ''}
-            whatsappTemplate={settings?.whatsappMessageTemplate ?? ''}
-            whatsappAllowAfterCleaned={settings?.whatsappAllowAfterCleaned ?? false}
-            isOnline={isOnline}
-          />
-        ))}
+      <div className="space-y-2 bg-slate-50 px-3 pb-4 pt-3">
+        {filtered.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-8 text-center text-sm font-semibold text-slate-500">
+            <Sparkles className="mx-auto mb-2 h-6 w-6 text-slate-400" aria-hidden="true" />
+            {activeTab === 'all' ? tSetup('noRooms') : t('emptyTab')}
+          </div>
+        ) : (
+          filtered.map((room) => (
+            <RoomCard
+              key={room.dailyPlanRoomId}
+              room={room}
+              hasUnreadChange={unreadRoomIds.includes(room.dailyPlanRoomId)}
+              whatsappEnabled={settings?.whatsappEnabled ?? false}
+              whatsappChatLink={settings?.whatsappChatLink ?? ''}
+              whatsappPhone={settings?.whatsappPhone ?? ''}
+              whatsappTemplate={settings?.whatsappMessageTemplate ?? ''}
+              whatsappAllowAfterCleaned={settings?.whatsappAllowAfterCleaned ?? false}
+              isOnline={isOnline}
+            />
+          ))
+        )}
       </div>
     </div>
   )

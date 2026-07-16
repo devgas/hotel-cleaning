@@ -1,6 +1,17 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { BarChart3, Lightbulb, LogIn, Mail, MessageCircle, ShieldCheck } from 'lucide-react'
+import {
+  BarChart3,
+  Building2,
+  CalendarCheck,
+  Lightbulb,
+  LogIn,
+  Mail,
+  MessageCircle,
+  ShieldCheck,
+  Users,
+} from 'lucide-react'
+import { DemoRequestForm } from '@/components/marketing/DemoRequestForm'
 
 const contactEmail = 'hotel.cleaning.app.info@gmail.com'
 
@@ -132,13 +143,21 @@ export default function Home() {
               Hotel Cleaning
             </span>
           </Link>
-          <Link
-            href="/uk/login"
-            aria-label="Login to Hotel Cleaning"
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#087b73]/20 bg-white/85 text-[#061b39] shadow-[0_12px_30px_rgba(8,55,70,0.14)] backdrop-blur transition hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d9488]"
-          >
-            <LogIn className="h-5 w-5" aria-hidden="true" />
-          </Link>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href="#request-demo"
+              className="inline-flex h-12 items-center justify-center rounded-full bg-[#071a3a] px-5 text-sm font-bold text-white shadow-[0_12px_30px_rgba(8,55,70,0.18)] transition hover:-translate-y-0.5 hover:bg-[#0b244c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d9488]"
+            >
+              Request a demo
+            </a>
+            <Link
+              href="/uk/login"
+              aria-label="Login to Hotel Cleaning"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#087b73]/20 bg-white/85 text-[#061b39] shadow-[0_12px_30px_rgba(8,55,70,0.14)] backdrop-blur transition hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d9488]"
+            >
+              <LogIn className="h-5 w-5" aria-hidden="true" />
+            </Link>
+          </div>
         </nav>
 
         <div className="mx-auto grid min-h-[calc(100vh-5.75rem)] w-full max-w-[1360px] items-center gap-8 py-8 lg:grid-cols-1 lg:py-6">
@@ -159,6 +178,23 @@ export default function Home() {
               A test housekeeping management application for room cleaning boards, task status tracking,
               team coordination, and practical hotel operations feedback.
             </p>
+
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#request-demo"
+                className="inline-flex h-13 items-center justify-center gap-2 rounded-full bg-[#071a3a] px-6 py-4 text-base font-extrabold text-white shadow-[0_16px_36px_rgba(7,26,58,0.2)] transition hover:-translate-y-0.5 hover:bg-[#0b244c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d9488]"
+              >
+                <CalendarCheck className="h-5 w-5" aria-hidden="true" />
+                Request a demo
+              </a>
+              <a
+                href={`mailto:${contactEmail}`}
+                className="inline-flex h-13 items-center justify-center gap-2 rounded-full border border-[#087b73]/25 bg-white/80 px-6 py-4 text-base font-bold text-[#071a3a] shadow-[0_12px_28px_rgba(8,55,70,0.1)] backdrop-blur transition hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d9488]"
+              >
+                <Mail className="h-5 w-5" aria-hidden="true" />
+                Contact us
+              </a>
+            </div>
 
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:max-w-2xl lg:grid-cols-1">
               {features.map((feature) => {
@@ -206,6 +242,48 @@ export default function Home() {
           >
             {contactEmail}
           </a>
+        </section>
+
+        <section
+          id="request-demo"
+          className="mx-auto mb-8 grid w-full max-w-[1360px] gap-6 rounded-3xl border border-[#d5ebe7] bg-white/95 p-5 shadow-[0_24px_60px_rgba(8,49,67,0.12)] scroll-mt-6 sm:p-7 lg:grid-cols-[0.9fr_1.1fr] lg:p-8"
+        >
+          <div className="flex flex-col justify-between gap-6">
+            <div>
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-[#e8fbf8] px-4 py-2 text-sm font-bold text-[#057468]">
+                <CalendarCheck className="h-4 w-4" aria-hidden="true" />
+                Tailored walkthrough
+              </div>
+              <h2 className="max-w-xl text-3xl font-black leading-tight text-[#071a3a] sm:text-4xl">
+                Request a demo for your hotel cleaning workflow
+              </h2>
+              <p className="mt-4 max-w-xl text-base leading-7 text-[#193051] sm:text-lg">
+                Share how your rooms, checkouts, stayovers, and team handoffs work today. The demo can focus on the board setup that matches your operation instead of a generic product tour.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              <div className="grid grid-cols-[2.75rem_1fr] gap-3 rounded-2xl bg-[#f5fbfa] p-4">
+                <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-[#057468] shadow-sm">
+                  <Building2 className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <p className="text-sm leading-6 text-[#102649]">Hotel size and room mix</p>
+              </div>
+              <div className="grid grid-cols-[2.75rem_1fr] gap-3 rounded-2xl bg-[#f5fbfa] p-4">
+                <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-[#057468] shadow-sm">
+                  <Users className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <p className="text-sm leading-6 text-[#102649]">Team roles and shift handoff</p>
+              </div>
+              <div className="grid grid-cols-[2.75rem_1fr] gap-3 rounded-2xl bg-[#f5fbfa] p-4">
+                <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-[#057468] shadow-sm">
+                  <BarChart3 className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <p className="text-sm leading-6 text-[#102649]">Priority rooms and status tracking</p>
+              </div>
+            </div>
+          </div>
+
+          <DemoRequestForm />
         </section>
       </section>
       </main>

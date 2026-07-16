@@ -11,7 +11,6 @@ const inter = Inter({ subsets: ['latin', 'cyrillic'] })
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
   themeColor: '#006b63',
 }
 
@@ -32,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html>
+    <html lang="uk">
       <body className={inter.className}>
         <ReduxProvider>{children}</ReduxProvider>
         <ServiceWorkerRegistration />

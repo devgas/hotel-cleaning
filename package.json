@@ -6,13 +6,17 @@
     "seed": "tsx prisma/seed.ts"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "bash ./scripts/with-env.sh .env.localdb next dev",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "postinstall": "prisma generate"
+    "test": "bash ./scripts/with-env.sh .env.test.local vitest",
+    "test:run": "bash ./scripts/with-env.sh .env.test.local vitest run",
+    "postinstall": "prisma generate",
+    "db:clone:local": "bash ./scripts/clone-production-db.sh",
+    "dev:remote": "next dev",
+    "prisma:db:push:local": "bash ./scripts/with-env.sh .env.localdb npx prisma db push",
+    "prisma:seed:local": "bash ./scripts/with-env.sh .env.localdb tsx prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

@@ -16,6 +16,8 @@ const withPWAConfig = withPWA({
 })
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  allowedDevOrigins: ['127.0.0.1'],
+}
 
 export default withPWAConfig(withNextIntl(nextConfig))

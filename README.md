@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) project for hotel cleaning workflows.
 
-## Getting Started
+## Local database workflow
 
-First, run the development server:
+This repository currently has a production-like `.env.local` checked in locally. Do not run the app or Prisma commands against that file if you want to avoid production writes.
 
 ```bash
+npm run db:clone:local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm test
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+What this does:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `npm run db:clone:local` creates or refreshes a local Postgres container, dumps the current remote database into it, and writes `.env.localdb` plus `.env.test.local`.
+- `npm run dev` uses `.env.localdb` explicitly.
+- `npm test` and `npm run test:run` use `.env.test.local` explicitly.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The generated local database listens on `127.0.0.1:54329` by default.
 
-## Learn More
+## Manual local Prisma commands
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run prisma:db:push:local
+npm run prisma:seed:local
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `scripts/clone-production-db.sh` reads the existing `.env.local` only to access the remote dump source and then writes separate local env files.
+- `prisma/seed.ts` now respects `DOTENV_CONFIG_PATH` so it can seed local databases safely.
 
-## Deploy on Vercel
+## Next.js docs
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project uses Next.js `16.2.2`. Before changing framework behavior, read the local docs under `node_modules/next/dist/docs/`.

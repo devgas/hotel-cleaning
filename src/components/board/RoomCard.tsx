@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { DoorOpen } from 'lucide-react'
+import { BedDouble, CalendarClock, DoorOpen, Minus, Plus, Send, Settings2, Star, UserRound } from 'lucide-react'
 import { defaultPriorityTime, priorityTimeOptions } from '@/lib/dailyPlans/priorityTime'
 import { isStayoverRoomType, roomTypeOptions } from '@/lib/roomTypes'
 import { useUpdateRoomStatusMutation, useUpdateRoomTypeMutation } from '@/store/api/dailyPlanApi'
@@ -32,6 +32,12 @@ interface Props {
 }
 
 const statusCycle: CleaningStatus[] = ['not_cleaned_yet', 'cleaned', 'not_needed']
+
+const cardStatusStyles: Record<CleaningStatus, string> = {
+  not_cleaned_yet: 'border-amber-200 bg-white shadow-[inset_5px_0_0_#f59e0b]',
+  cleaned: 'border-emerald-200 bg-white shadow-[inset_5px_0_0_#10b981]',
+  not_needed: 'border-slate-200 bg-slate-50 shadow-[inset_5px_0_0_#cbd5e1]',
+}
 
 export function RoomCard({
   room,
@@ -105,6 +111,8 @@ export function RoomCard({
 
   const canSendWhatsApp =
     canUseWhatsAppFlow && (room.status !== 'cleaned' || whatsappAllowAfterCleaned)
+  const roomTypeLabel = t(room.roomType)
+  const RoomTypeIcon = room.roomType === 'checkout' ? DoorOpen : BedDouble
 
   function openEditor() {
     setDraftRoomType(room.roomType)
@@ -160,148 +168,189 @@ export function RoomCard({
   }
 
   const isBigStayover = room.roomType === 'big-stayover'
+  const stayLengthLabel =
+    room.daysSinceLastCheckout !== null && room.daysSinceLastCheckout !== undefined
+      ? getDaysSinceCleanedLabel(room.daysSinceLastCheckout)
+      : null
 
   return (
     <>
       <div
         className={cn(
-          'relative grid grid-cols-[minmax(0,1fr)_3rem_6rem] items-center gap-3 overflow-hidden rounded-xl border px-3 py-2.5 shadow-sm',
-          room.priority && 'border-l-4 border-l-orange-400',
-          isBigStayover ? 'border-amber-400 bg-amber-100/90 shadow-[0_8px_24px_-16px_rgba(245,158,11,0.85)]' : 'bg-white'
+          'relative grid min-h-24 grid-cols-[4.75rem_minmax(0,1fr)_auto] items-center gap-2 overflow-hidden rounded-xl border py-3 pl-4 pr-3 shadow-sm transition-colors',
+          cardStatusStyles[room.status],
+          !isOnline && 'opacity-70',
+          isBigStayover && 'border-amber-400 bg-amber-50 shadow-[inset_5px_0_0_#d97706,0_8px_24px_-16px_rgba(245,158,11,0.85)]',
+          room.priority && 'ring-1 ring-orange-200'
         )}
       >
-        {isBigStayover && (
-          <div
-            aria-hidden="true"
-            className="absolute inset-y-0 left-0 w-2 bg-amber-500"
-          />
-        )}
+        <button
+          type="button"
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={openEditor}
+          disabled={!isOnline}
+          className="group/room-number flex min-w-0 items-start gap-1 self-start rounded-lg pr-1 text-left text-3xl font-black leading-none text-slate-950 transition-colors hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-70"
+          aria-label={`${t('editRoom')} ${room.roomNumber}`}
+          title={t('editHint')}
+        >
+          <span className="tabular-nums">{room.roomNumber}</span>
+          <Settings2 className="mt-0.5 h-3.5 w-3.5 text-slate-300 transition-colors group-hover/room-number:text-emerald-700" aria-hidden="true" />
+          {hasUnreadChange && (
+            <span className="mt-1.5 block h-2.5 w-2.5 rounded-full bg-red-500" aria-label={t('newUpdates')} />
+          )}
+        </button>
         <div
-          className={cn('flex-1 min-w-0', isBigStayover && 'pl-2')}
+          className="min-w-0 py-0.5"
           onPointerDown={handlePointerDown}
           onPointerUp={clearLongPressTimer}
           onPointerLeave={clearLongPressTimer}
           onPointerCancel={clearLongPressTimer}
         >
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-2 text-lg font-bold text-gray-900">
-              <span>{room.roomNumber}</span>
-              {hasUnreadChange && (
-                <span className="block h-2.5 w-2.5 rounded-full bg-red-500" aria-label="Unread change" />
-              )}
-            </span>
-            {room.priority && (
-              <span className="text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">
-                ★ {room.priorityTime ?? defaultPriorityTime}
+          <div className="grid min-w-0 gap-2">
+            <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+              <span className="inline-flex h-7 items-center gap-1 rounded-md bg-slate-100 px-2 text-xs font-bold text-slate-700">
+                <RoomTypeIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                {roomTypeLabel}
               </span>
-            )}
+              {room.priority && (
+                <span className="inline-flex h-7 items-center gap-1 rounded-md bg-orange-100 px-2 text-xs font-black text-orange-800">
+                  <Star className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
+                  {t('priorityUntil', { time: room.priorityTime ?? defaultPriorityTime })}
+                </span>
+              )}
+            </div>
+            <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+              {room.guestCount >= 1 && (
+                <span
+                  className="inline-flex h-7 items-center justify-center gap-1 rounded-md bg-emerald-50 px-2 text-xs font-bold text-emerald-800"
+                  aria-label={t('guestCount', { count: room.guestCount })}
+                  title={t('guestCount', { count: room.guestCount })}
+                >
+                  <UserRound className="h-3.5 w-3.5" aria-hidden="true" />
+                  {room.guestCount}
+                </span>
+              )}
+              {stayLengthLabel && (
+                <span
+                  className="inline-flex h-7 items-center justify-center gap-1 rounded-md bg-sky-50 px-2 text-xs font-bold text-sky-800"
+                  title={t('lastCheckout')}
+                  aria-label={t('stayLength', { days: stayLengthLabel })}
+                >
+                  <CalendarClock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  {t('stayLengthShort', { days: stayLengthLabel })}
+                </span>
+              )}
+              {room.updatedBy && (
+                <span className="min-w-0 truncate text-xs font-medium text-slate-400">
+                  {t('updatedBy')} {room.updatedBy}
+                </span>
+              )}
+            </div>
           </div>
-          {room.updatedBy && (
-            <p className="text-xs text-gray-400 mt-0.5">
-              {t('updatedBy')} {room.updatedBy}
-            </p>
-          )}
         </div>
-        <div
-          className="flex w-12 -translate-x-5 flex-col items-stretch justify-center gap-1"
-          onPointerDown={handlePointerDown}
-          onPointerUp={clearLongPressTimer}
-          onPointerLeave={clearLongPressTimer}
-          onPointerCancel={clearLongPressTimer}
-        >
-          {room.guestCount >= 1 && (
-            <span className="inline-flex h-6 items-center justify-center gap-1 rounded bg-green-50 px-1.5 text-xs font-medium text-green-700">
-              <span aria-hidden="true">👤</span>
-              {room.guestCount}
-            </span>
-          )}
-          {room.daysSinceLastCheckout !== null && room.daysSinceLastCheckout !== undefined && (
-            <span
-              className="inline-flex h-6 items-center justify-center gap-1 rounded bg-sky-50 px-1.5 text-xs font-medium text-sky-700"
-              title={t('lastCheckout')}
-              aria-label={t('lastCheckout') + ': ' + getDaysSinceCleanedLabel(room.daysSinceLastCheckout)}
-            >
-              <DoorOpen className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-              {getDaysSinceCleanedLabel(room.daysSinceLastCheckout)}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-2 self-center">
           {canSendWhatsApp && (
-            <button onClick={() => openWhatsApp(true)} className="text-green-600 text-lg" title={t('openWhatsApp')}>
-              💬
+            <button
+              type="button"
+              onClick={() => openWhatsApp(true)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              title={t('openWhatsApp')}
+              aria-label={`${t('openWhatsApp')} ${room.roomNumber}`}
+            >
+              <Send className="h-5 w-5" aria-hidden="true" />
             </button>
           )}
-          <button onClick={cycleStatus} disabled={!isOnline}>
+          <button
+            type="button"
+            onClick={cycleStatus}
+            disabled={!isOnline}
+            className="min-h-11 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed"
+            aria-label={`${room.roomNumber}: ${statusLabels[room.status]}`}
+          >
             <StatusBadge status={room.status} label={statusLabels[room.status]} />
           </button>
         </div>
       </div>
       <Sheet open={isEditorOpen} onOpenChange={setIsEditorOpen}>
-        <SheetContent side="bottom" className="rounded-t-2xl">
+        <SheetContent side="bottom" className="rounded-t-2xl bg-slate-50">
           <SheetHeader>
-            <SheetTitle>{t('editRoom')}</SheetTitle>
-            <SheetDescription>{room.roomNumber}</SheetDescription>
+            <SheetTitle className="text-left text-xl font-black text-slate-950">
+              {t('editRoom')} {room.roomNumber}
+            </SheetTitle>
+            <SheetDescription className="text-left">{t('editHint')}</SheetDescription>
           </SheetHeader>
           <div className="space-y-4 px-4 pb-2">
             <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-700">{t('roomType')}</p>
-              <div className="flex rounded-lg overflow-hidden border border-gray-200 text-sm">
-                {roomTypeOptions.map((type) => (
-                  <button
-                    key={type}
-                    onClick={() => handleRoomTypeChange(type)}
-                    className={cn(
-                      'flex-1 px-3 py-2',
-                      draftRoomType === type ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'
-                    )}
-                  >
-                    {t(type)}
-                  </button>
-                ))}
+              <p className="text-sm font-bold text-slate-700">{t('roomType')}</p>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                {roomTypeOptions.map((type) => {
+                  const OptionIcon = type === 'checkout' ? DoorOpen : BedDouble
+                  return (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => handleRoomTypeChange(type)}
+                      className={cn(
+                        'flex min-h-12 items-center justify-center gap-2 rounded-xl border px-3 py-2 font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500',
+                        draftRoomType === type
+                          ? 'border-emerald-300 bg-emerald-50 text-emerald-900 shadow-sm'
+                          : 'border-slate-200 bg-white text-slate-600'
+                      )}
+                    >
+                      <OptionIcon className="h-4 w-4" aria-hidden="true" />
+                      {t(type)}
+                    </button>
+                  )
+                })}
               </div>
             </div>
             <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-700">Guests</p>
-              <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2">
+              <p className="text-sm font-bold text-slate-700">{t('guests')}</p>
+              <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
                 <button
+                  type="button"
                   onClick={() => setDraftGuestCount((n) => Math.max(1, n - 1))}
                   disabled={draftGuestCount <= 1}
-                  className="w-8 h-8 rounded-full bg-gray-200 text-gray-600 font-bold text-lg disabled:opacity-30"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-700 transition-colors hover:bg-slate-100 disabled:opacity-30"
+                  aria-label={t('decreaseGuests')}
                 >
-                  −
+                  <Minus className="h-5 w-5" aria-hidden="true" />
                 </button>
-                <span className="flex-1 text-center text-xl font-bold text-gray-900">
+                <span className="flex-1 text-center text-2xl font-black tabular-nums text-slate-950">
                   {draftGuestCount}
                 </span>
                 <button
+                  type="button"
                   onClick={() => setDraftGuestCount((n) => Math.min(5, n + 1))}
                   disabled={draftGuestCount >= 5}
-                  className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-lg disabled:opacity-30"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white transition-colors hover:bg-emerald-700 disabled:opacity-30"
+                  aria-label={t('increaseGuests')}
                 >
-                  +
+                  <Plus className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
             </div>
             <button
+              type="button"
               onClick={handlePriorityToggle}
               disabled={draftRoomType !== 'checkout'}
               className={cn(
-                'w-full rounded-lg border px-4 py-3 text-sm font-medium transition-colors',
-                draftRoomType !== 'checkout' && 'cursor-not-allowed border-gray-100 text-gray-300',
-                draftRoomType === 'checkout' && draftPriority && 'border-orange-300 bg-orange-100 text-orange-700',
-                draftRoomType === 'checkout' && !draftPriority && 'border-gray-200 text-gray-600'
+                'flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400',
+                draftRoomType !== 'checkout' && 'cursor-not-allowed border-slate-100 bg-white text-slate-300',
+                draftRoomType === 'checkout' && draftPriority && 'border-orange-300 bg-orange-100 text-orange-800 shadow-sm',
+                draftRoomType === 'checkout' && !draftPriority && 'border-slate-200 bg-white text-slate-600'
               )}
             >
-              ★ {t('priority')}
+              <Star className={cn('h-4 w-4', draftPriority && 'fill-current')} aria-hidden="true" />
+              {draftPriority ? t('priorityOn') : t('priorityOff')}
             </button>
             {draftRoomType === 'checkout' && draftPriority && (
               <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-700">{t('priorityTime')}</p>
+                <p className="text-sm font-bold text-slate-700">{t('priorityTime')}</p>
                 <select
                   value={draftPriorityTime}
                   onChange={(e) => setDraftPriorityTime(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
                   {priorityTimeOptions.map((time) => (
                     <option key={time} value={time}>
@@ -312,12 +361,21 @@ export function RoomCard({
               </div>
             )}
           </div>
-          <SheetFooter>
-            <Button variant="outline" onClick={() => setIsEditorOpen(false)} disabled={isSavingType}>
+          <SheetFooter className="gap-2 bg-slate-50">
+            <Button
+              variant="outline"
+              onClick={() => setIsEditorOpen(false)}
+              disabled={isSavingType}
+              className="h-11 rounded-xl bg-white"
+            >
               {tCommon('cancel')}
             </Button>
-            <Button onClick={handleSaveChanges} disabled={isSavingType}>
-              {isSavingType ? '...' : t('saveChanges')}
+            <Button
+              onClick={handleSaveChanges}
+              disabled={isSavingType}
+              className="h-11 rounded-xl bg-emerald-700 text-white hover:bg-emerald-800"
+            >
+              {isSavingType ? tCommon('loading') : t('saveChanges')}
             </Button>
           </SheetFooter>
         </SheetContent>

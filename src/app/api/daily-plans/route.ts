@@ -23,6 +23,15 @@ export async function POST(req: NextRequest) {
   }
   targetDate.setHours(0, 0, 0, 0)
 
+  const selectedRoomIds = [...new Set(parsed.data.rooms.map((room) => room.roomId))]
+  const hotelRooms = await prisma.room.findMany({
+    where: { id: { in: selectedRoomIds }, hotelId, isActive: true },
+    select: { id: true },
+  })
+  if (hotelRooms.length !== selectedRoomIds.length) {
+    return NextResponse.json({ error: { rooms: ['One or more selected rooms are invalid'] } }, { status: 400 })
+  }
+
   const existing = await prisma.dailyPlan.findUnique({
     where: { hotelId_date: { hotelId, date: targetDate } },
     include: {
@@ -36,8 +45,8 @@ export async function POST(req: NextRequest) {
   })
 
   if (existing) {
-    const selectedRoomIds = new Set(parsed.data.rooms.map((room) => room.roomId))
-    const roomsToRemove = existing.rooms.filter((room) => !selectedRoomIds.has(room.roomId))
+    const selectedRoomIdSet = new Set(selectedRoomIds)
+    const roomsToRemove = existing.rooms.filter((room) => !selectedRoomIdSet.has(room.roomId))
     const roomIdsToRemove = roomsToRemove.map((room) => room.id)
     const existingRoomMap = new Map(existing.rooms.map((room) => [room.roomId, room.id]))
 

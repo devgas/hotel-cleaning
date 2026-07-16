@@ -6,7 +6,7 @@ describe('StatusBadge', () => {
   it('shows cleaned status with green style', () => {
     render(<StatusBadge status="cleaned" label="Прибрано" />)
     const el = screen.getByText('Прибрано')
-    expect(el.className).toContain('green')
+    expect(el.className).toContain('emerald')
   })
 
   it('shows not_cleaned_yet with amber style', () => {
@@ -18,6 +18,6 @@ describe('StatusBadge', () => {
   it('shows not_needed with gray style', () => {
     render(<StatusBadge status="not_needed" label="Не потрібно" />)
     const el = screen.getByText('Не потрібно')
-    expect(el.className).toContain('gray')
+    expect(el.className).toContain('slate')
   })
 })
