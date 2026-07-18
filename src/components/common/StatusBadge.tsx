@@ -14,7 +14,7 @@ export function StatusBadge({ status, label }: { status: CleaningStatus; label: 
   return (
     <span
       className={cn(
-        'inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold leading-tight',
+        'inline-flex min-h-9 w-full items-center justify-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold leading-tight',
         statusStyles[status]
       )}
     >
