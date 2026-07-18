@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import type { BoardTab } from '@/lib/boardView'
 
-type BoardTab = 'all' | 'priority' | 'checkout' | 'stayover'
+const boardTabs = ['all', 'checkout', 'stayover'] as const
+
+function isBoardTab(value: string): value is BoardTab {
+  return boardTabs.includes(value as BoardTab)
+}
 
 interface UIState {
   boardTab: BoardTab
@@ -19,7 +24,7 @@ export const uiSlice = createSlice({
   initialState,
   reducers: {
     setBoardTab: (state, action: PayloadAction<BoardTab>) => {
-      state.boardTab = action.payload
+      state.boardTab = isBoardTab(action.payload) ? action.payload : 'all'
     },
     setOnline: (state, action: PayloadAction<boolean>) => {
       state.isOnline = action.payload

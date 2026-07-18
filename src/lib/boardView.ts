@@ -1,7 +1,7 @@
 import { isStayoverRoomType } from '@/lib/roomTypes'
 import type { RoomWithStatus } from '@/types'
 
-export type BoardTab = 'all' | 'priority' | 'checkout' | 'stayover'
+export type BoardTab = 'all' | 'checkout' | 'stayover'
 
 export interface BoardTabStats {
   total: number
@@ -29,7 +29,6 @@ function countRoom(stats: BoardTabStats, room: RoomWithStatus) {
 export function getBoardViewMetrics(rooms: RoomWithStatus[]): BoardViewMetrics {
   const tabCounts = {
     all: emptyStats(),
-    priority: emptyStats(),
     checkout: emptyStats(),
     stayover: emptyStats(),
   }
@@ -43,7 +42,6 @@ export function getBoardViewMetrics(rooms: RoomWithStatus[]): BoardViewMetrics {
     if (room.status === 'not_cleaned_yet') notCleaned += 1
 
     countRoom(tabCounts.all, room)
-    if (room.priority) countRoom(tabCounts.priority, room)
     if (room.roomType === 'checkout') countRoom(tabCounts.checkout, room)
     if (isStayoverRoomType(room.roomType)) countRoom(tabCounts.stayover, room)
   }
@@ -52,7 +50,6 @@ export function getBoardViewMetrics(rooms: RoomWithStatus[]): BoardViewMetrics {
 }
 
 export function filterBoardRooms(rooms: RoomWithStatus[], activeTab: BoardTab): RoomWithStatus[] {
-  if (activeTab === 'priority') return rooms.filter((room) => room.priority)
   if (activeTab === 'checkout') return rooms.filter((room) => room.roomType === 'checkout')
   if (activeTab === 'stayover') return rooms.filter((room) => isStayoverRoomType(room.roomType))
 

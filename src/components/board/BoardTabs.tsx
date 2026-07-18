@@ -3,13 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setBoardTab } from '@/store/slices/uiSlice'
 import type { RootState } from '@/store'
 import { useTranslations } from 'next-intl'
-import { BedDouble, DoorOpen, ListFilter, Star } from 'lucide-react'
+import { BedDouble, DoorOpen, ListFilter } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import type { BoardTab } from '@/lib/boardView'
 
-type Tab = 'all' | 'priority' | 'checkout' | 'stayover'
 const tabs = [
   { key: 'all', Icon: ListFilter },
-  { key: 'priority', Icon: Star },
   { key: 'checkout', Icon: DoorOpen },
   { key: 'stayover', Icon: BedDouble },
 ] as const
@@ -21,7 +20,7 @@ interface TabCounts {
 }
 
 interface Props {
-  counts?: Record<Tab, TabCounts>
+  counts?: Record<BoardTab, TabCounts>
 }
 
 export function BoardTabs({ counts }: Props) {
@@ -46,7 +45,7 @@ export function BoardTabs({ counts }: Props) {
           )}
         >
           <span className="flex items-center gap-1.5 leading-none">
-            <Icon className={cn('h-4 w-4 shrink-0', tab === 'priority' && active === tab && 'fill-current')} aria-hidden="true" />
+            <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
             {t(tab)}
           </span>
           {counts != null && (

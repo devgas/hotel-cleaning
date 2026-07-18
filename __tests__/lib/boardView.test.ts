@@ -33,16 +33,14 @@ describe('boardView', () => {
       notCleaned: 1,
       tabCounts: {
         all: { total: 3, cleaned: 1, notCleaned: 1 },
-        priority: { total: 1, cleaned: 1, notCleaned: 0 },
         checkout: { total: 1, cleaned: 1, notCleaned: 0 },
         stayover: { total: 2, cleaned: 0, notCleaned: 1 },
       },
     })
   })
 
-  it('filters the active board tab including priority rooms', () => {
+  it('filters the active board tab by room category', () => {
     expect(filterBoardRooms(rooms, 'all')).toHaveLength(3)
-    expect(filterBoardRooms(rooms, 'priority').map((item) => item.dailyPlanRoomId)).toEqual([1])
     expect(filterBoardRooms(rooms, 'checkout').map((item) => item.dailyPlanRoomId)).toEqual([1])
     expect(filterBoardRooms(rooms, 'stayover').map((item) => item.dailyPlanRoomId)).toEqual([2, 3])
   })
