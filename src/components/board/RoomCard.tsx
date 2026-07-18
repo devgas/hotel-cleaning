@@ -177,7 +177,7 @@ export function RoomCard({
     <>
       <div
         className={cn(
-          'relative grid min-h-32 grid-cols-[4.75rem_minmax(0,1fr)_7.75rem] items-start gap-x-2 overflow-hidden rounded-xl border py-3 pl-4 pr-3 shadow-sm transition-colors',
+          'relative grid min-h-32 grid-cols-[6.25rem_minmax(0,1fr)] items-start gap-x-3 gap-y-2 rounded-xl border py-3 pl-4 pr-3 shadow-sm transition-colors',
           cardStatusStyles[room.status],
           !isOnline && 'opacity-70',
           isBigStayover && 'border-amber-400 bg-amber-50 shadow-[inset_5px_0_0_#d97706,0_8px_24px_-16px_rgba(245,158,11,0.85)]',
@@ -189,11 +189,11 @@ export function RoomCard({
           onPointerDown={(event) => event.stopPropagation()}
           onClick={openEditor}
           disabled={!isOnline}
-          className="group/room-number flex w-full min-w-0 items-start gap-1 self-start rounded-lg pr-1 text-left text-[2.45rem] font-black leading-none text-slate-950 transition-colors hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-70"
+          className="group/room-number flex w-full items-start gap-1 self-start rounded-lg pr-1 text-left text-[2.35rem] font-black leading-none text-slate-950 transition-colors hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-70"
           aria-label={`${t('editRoom')} ${room.roomNumber}`}
           title={t('editHint')}
         >
-          <span className="min-w-0 truncate tabular-nums">{room.roomNumber}</span>
+          <span className="shrink-0 tabular-nums">{room.roomNumber}</span>
           <Settings2 className="mt-0.5 h-3.5 w-3.5 text-slate-300 transition-colors group-hover/room-number:text-emerald-700" aria-hidden="true" />
           {hasUnreadChange && (
             <span className="mt-1.5 block h-2.5 w-2.5 rounded-full bg-red-500" aria-label={t('newUpdates')} />
@@ -206,25 +206,23 @@ export function RoomCard({
           onPointerLeave={clearLongPressTimer}
           onPointerCancel={clearLongPressTimer}
         >
-          <div className="grid min-h-[6.25rem] min-w-0 grid-rows-[1.75rem_1.75rem_1.75rem_1.25rem] gap-1">
-            <div className="min-w-0">
-              <span className="inline-flex h-7 max-w-full items-center gap-1 rounded-md bg-slate-100 px-2 text-xs font-bold text-slate-700">
+          <div className="grid min-w-0 gap-2">
+            <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+              <span className="inline-flex min-h-7 items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-xs font-bold leading-tight text-slate-700">
                 <RoomTypeIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                <span className="min-w-0 truncate">{roomTypeLabel}</span>
+                <span>{roomTypeLabel}</span>
               </span>
-            </div>
-            <div className="min-w-0">
               {room.priority && (
-                <span className="inline-flex h-7 max-w-full items-center gap-1 rounded-md bg-orange-100 px-2 text-xs font-black text-orange-800">
+                <span className="inline-flex min-h-7 items-center gap-1 rounded-md bg-orange-100 px-2 py-1 text-xs font-black leading-tight text-orange-800">
                   <Star className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
-                  <span className="min-w-0 truncate">{t('priorityUntil', { time: room.priorityTime ?? defaultPriorityTime })}</span>
+                  <span>{t('priorityUntil', { time: room.priorityTime ?? defaultPriorityTime })}</span>
                 </span>
               )}
             </div>
-            <div className="flex min-w-0 items-center gap-1.5 overflow-hidden">
+            <div className="flex min-w-0 flex-wrap items-center gap-1.5">
               {room.guestCount >= 1 && (
                 <span
-                  className="inline-flex h-7 shrink-0 items-center justify-center gap-1 rounded-md bg-emerald-50 px-2 text-xs font-bold text-emerald-800"
+                  className="inline-flex min-h-7 items-center justify-center gap-1 rounded-md bg-emerald-50 px-2 py-1 text-xs font-bold leading-tight text-emerald-800"
                   aria-label={t('guestCount', { count: room.guestCount })}
                   title={t('guestCount', { count: room.guestCount })}
                 >
@@ -234,45 +232,45 @@ export function RoomCard({
               )}
               {stayLengthLabel && (
                 <span
-                  className="inline-flex h-7 min-w-0 items-center justify-center gap-1 rounded-md bg-sky-50 px-2 text-xs font-bold text-sky-800"
+                  className="inline-flex min-h-7 items-center justify-center gap-1 rounded-md bg-sky-50 px-2 py-1 text-xs font-bold leading-tight text-sky-800"
                   title={t('lastCheckout')}
                   aria-label={t('stayLength', { days: stayLengthLabel })}
                 >
                   <CalendarClock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  <span className="min-w-0 truncate">{t('stayLengthShort', { days: stayLengthLabel })}</span>
+                  <span>{t('stayLengthShort', { days: stayLengthLabel })}</span>
                 </span>
               )}
             </div>
-            <div className="min-w-0">
+            <div>
               {room.updatedBy && (
-                <span className="block min-w-0 truncate text-xs font-medium leading-5 text-slate-400">
+                <span className="block text-xs font-medium leading-5 text-slate-400">
                   {t('updatedBy')} {room.updatedBy}
                 </span>
               )}
             </div>
+            <div className="flex min-w-0 flex-wrap items-center gap-2 pt-1">
+              {canSendWhatsApp && (
+                <button
+                  type="button"
+                  onClick={() => openWhatsApp(true)}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  title={t('openWhatsApp')}
+                  aria-label={`${t('openWhatsApp')} ${room.roomNumber}`}
+                >
+                  <Send className="h-5 w-5" aria-hidden="true" />
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={cycleStatus}
+                disabled={!isOnline}
+                className="min-h-11 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed"
+                aria-label={`${room.roomNumber}: ${statusLabels[room.status]}`}
+              >
+                <StatusBadge status={room.status} label={statusLabels[room.status]} />
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="flex w-full flex-col items-end justify-center gap-1.5 self-center">
-          {canSendWhatsApp && (
-            <button
-              type="button"
-              onClick={() => openWhatsApp(true)}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-              title={t('openWhatsApp')}
-              aria-label={`${t('openWhatsApp')} ${room.roomNumber}`}
-            >
-              <Send className="h-5 w-5" aria-hidden="true" />
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={cycleStatus}
-            disabled={!isOnline}
-            className="min-h-11 w-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed"
-            aria-label={`${room.roomNumber}: ${statusLabels[room.status]}`}
-          >
-            <StatusBadge status={room.status} label={statusLabels[room.status]} />
-          </button>
         </div>
       </div>
       <Sheet open={isEditorOpen} onOpenChange={setIsEditorOpen}>
